@@ -1,4 +1,4 @@
-# Piloto de Manquepe
+# Piloto de Manquehue
 
 ## Punto de partida registrado
 

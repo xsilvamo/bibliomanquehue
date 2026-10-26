@@ -66,13 +66,13 @@ export function Layout({ children }: { children: ReactNode }) {
     <a href="#contenido" className="skip-link">Ir al contenido</a>
     <header className="site-header">
       <div className="container header-inner">
-        <Link to="/" className="brand" aria-label="Manquepe, inicio"><span className="brand-icon"><BookOpen size={25} strokeWidth={1.6} /></span><span>manquepe<span className="brand-dot">.</span></span></Link>
+        <Link to="/" className="brand" aria-label="Manquehue, inicio"><span className="brand-icon"><BookOpen size={25} strokeWidth={1.6} /></span><span>manquehue<span className="brand-dot">.</span></span></Link>
         <button ref={toggleRef} className="menu-toggle" aria-label={open ? 'Cerrar menú' : 'Abrir menú'} aria-expanded={open} aria-controls="main-nav" onClick={() => setOpen(!open)}>{open ? <X /> : <Menu />}</button>
         <nav ref={navRef} id="main-nav" aria-label="Principal" className={open ? 'nav open' : 'nav'} onClick={event => { if ((event.target as Element).closest('a')) setOpen(false); }}>
           <NavLink to="/biblioteca">Biblioteca</NavLink>
           <NavLink to="/reflexiones">Reflexiones</NavLink>
           <NavLink to="/lectores">Lectores</NavLink>
-          <NavLink to="/sobre">Sobre Manquepe</NavLink>
+          <NavLink to="/sobre">Sobre Manquehue</NavLink>
           <NavLink className="nav-join" to={session ? '/mi-espacio' : '/entrar'}>{session ? (profile?.alias ?? 'Mi espacio') : 'Soy parte'}<ArrowUpRight size={17} /></NavLink>
           {member?.role === 'admin' && !member.suspended && <NavLink to="/admin">Administrar</NavLink>}
           {session && <button className="icon-button logout" aria-label="Cerrar sesión" onClick={() => void backend.signOut()}><LogOut size={18} /></button>}
@@ -83,7 +83,7 @@ export function Layout({ children }: { children: ReactNode }) {
     <main id="contenido" tabIndex={-1} aria-hidden={mobile && open ? true : undefined}>{children}</main>
     <footer className="site-footer" aria-hidden={mobile && open ? true : undefined}>
       <div className="container footer-top">
-        <div><Link to="/" className="brand"><BookOpen size={25} strokeWidth={1.5} />manquepe.</Link><p>Libros que nos acercan a Cristo.<br />Lecturas que nos acercan entre nosotros.</p></div>
+        <div><Link to="/" className="brand"><BookOpen size={25} strokeWidth={1.5} />manquehue.</Link><p>Libros que nos acercan a Cristo.<br />Lecturas que nos acercan entre nosotros.</p></div>
         <div className="footer-links">
           <Link to="/biblioteca">Explorar el librero <ArrowUpRight size={15} /></Link>
           <Link to="/sobre">Jóvenes Manquehue <ArrowUpRight size={15} /></Link>

@@ -1,4 +1,4 @@
-# Arquitectura de Manquepe
+# Arquitectura de Manquehue
 
 ## Componentes y límites
 

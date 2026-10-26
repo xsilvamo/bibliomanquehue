@@ -4,7 +4,7 @@ Estos textos se incluyen como borradores en la web. Un responsable de Jóvenes M
 
 ## Presentación
 
-Manquepe nace del librero de Jóvenes Manquehue: un lugar para descubrir libros, compartir lecturas y encontrarnos en la fe. Creemos que una buena lectura puede abrir una conversación, acompañar una pregunta y acercarnos a Cristo.
+Manquehue nace del librero de Jóvenes Manquehue: un lugar para descubrir libros, compartir lecturas y encontrarnos en la fe. Creemos que una buena lectura puede abrir una conversación, acompañar una pregunta y acercarnos a Cristo.
 
 ## Sobre el proyecto
 

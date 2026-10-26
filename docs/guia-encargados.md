@@ -57,6 +57,6 @@ Si un lector solicita eliminar su cuenta, verifica su identidad y elimina el usu
 
 Si toda la biblioteca muestra un error, revisa el estado del proyecto en Supabase. El plan gratuito puede pausarse tras poca actividad: el propietario debe reactivarlo en el panel y esperar a que esté listo. No hagas registros ni compras nuevos para resolver una pausa.
 
-Si falla Google, comprueba que se usa el correo invitado, que el proveedor está habilitado y que la URL `/entrar` está permitida. En la fase de prueba de Google, la cuenta debe estar también entre los usuarios de prueba del consentimiento OAuth. Una invitación de Manquepe y un usuario de prueba de Google son configuraciones diferentes.
+Si falla Google, comprueba que se usa el correo invitado, que el proveedor está habilitado y que la URL `/entrar` está permitida. En la fase de prueba de Google, la cuenta debe estar también entre los usuarios de prueba del consentimiento OAuth. Una invitación de Manquehue y un usuario de prueba de Google son configuraciones diferentes.
 
 Las variables `VITE_` se fijan al compilar: después de corregirlas, vuelve a desplegar. No copies mensajes completos con tokens o códigos de acceso en correos públicos.
