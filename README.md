@@ -10,6 +10,7 @@ El código ya está respaldado en [GitHub](https://github.com/xsilvamo/manquepe)
 
 | Documento | Para qué sirve |
 | --- | --- |
+| [Móvil y dominio de pruebas](docs/dominio-pruebas.md) | Publicación propuesta en `manquepe.aaronsilva.site` y ajustes de OAuth |
 | [Estado y próximos pasos](docs/estado-proyecto.md) | Avances confirmados, pendientes y punto de continuación |
 | [Configuración](docs/configuracion.md) | Supabase, Google, variables y primer administrador |
 | [Arquitectura](docs/arquitectura.md) | Pantallas, datos, permisos y flujo de moderación |
@@ -60,7 +61,7 @@ VITE_SUPABASE_URL= VITE_SUPABASE_ANON_KEY= VITE_CONTACT_EMAIL= npm test
 npm run build
 ```
 
-La última verificación de esta entrega documental pasó **32 pruebas** y la compilación de producción. La suite SQL ejecuta la migración y sus permisos sobre PostgreSQL mediante PGlite, con infraestructura mínima de Auth y Storage preparada para pruebas. No sustituye la integración con Supabase alojado.
+La última verificación de esta entrega documental pasó **36 pruebas** y la compilación de producción. La suite SQL ejecuta la migración y sus permisos sobre PostgreSQL mediante PGlite, con infraestructura mínima de Auth y Storage preparada para pruebas. No sustituye la integración con Supabase alojado.
 
 Con Chrome/Chromium instalado y permiso para abrir puertos locales:
 

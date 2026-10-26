@@ -67,3 +67,11 @@ Los accesos a Supabase, Google Cloud, GitHub y Cloudflare se entregan por un can
 Se ejecutaron las 32 pruebas con las variables de conexión vacías para aislarlas del proyecto remoto, y `npm run build` terminó correctamente con la configuración local. Se comprobó `git diff --check`, la existencia de los enlaces Markdown relativos y la exclusión de `.env`, `.temp`, bundles y exportaciones privadas. Se revisaron los documentos y la configuración a respaldar sin copiar valores de credenciales a este registro.
 
 No se aplicaron nuevas migraciones ni se modificó la configuración remota durante esta tarea. Los cambios documentales quedan preparados en la carpeta de trabajo; el commit y push se realizan con los comandos de `docs/desarrollo.md`.
+
+## Optimización móvil y subdominio solicitado
+
+El responsable solicitó mejorar el uso en teléfonos y preparar un subdominio de `aaronsilva.site`, alojado en su Cloudflare. Se propone `manquepe.aaronsilva.site`; la activación de Pages, DNS, HTTPS y las redirecciones remotas no está confirmada.
+
+Se añadieron ajustes móviles para campos, objetivos táctiles, encabezados, tarjetas, tablas y navegación, además de cuatro regresiones del menú. El procedimiento de despliegue y verificación está en `docs/dominio-pruebas.md`. La carpeta local `.obsidian/` se mantiene fuera de este cambio. La migración y los datos de Supabase no cambian.
+
+Verificación del cambio móvil: 36 pruebas aprobadas, compilación correcta y revisión de código sin hallazgos importantes. El smoke test real sigue bloqueado por `listen EPERM` en esta sesión; el diseño debe revisarse en dispositivos/navegador al desplegar. El subdominio no se marca como activo hasta verificarlo en Cloudflare.
