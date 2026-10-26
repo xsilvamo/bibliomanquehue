@@ -1,0 +1,3 @@
+# Entorno inicial de pruebas. Revisar junto con X-Robots-Tag antes de abrir a buscadores.
+User-agent: *
+Disallow: /

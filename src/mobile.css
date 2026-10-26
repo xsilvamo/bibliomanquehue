@@ -1,0 +1,163 @@
+/* Loaded after the base design. Keep real content in view instead of hiding overflow. */
+html { -webkit-text-size-adjust: 100%; }
+.button, input, textarea, select { max-width: 100%; }
+h1, h2, h3, .book-author, .reflection-book, .footer-invite { overflow-wrap: anywhere; }
+.hero-copy, .section-head > div, .book-detail-copy, .profile-heading > div,
+.reflection-author > div, .my-reflection-head > div, .reader-card, .notice > span {
+  min-width: 0;
+}
+.table-scroll { overscroll-behavior-x: contain; }
+.table-scroll:focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; }
+
+@media (max-width: 1000px) {
+  :root { --mobile-header-height: calc(76px + env(safe-area-inset-top, 0px)); }
+  .site-header {
+    position: sticky;
+    top: 0;
+    height: var(--mobile-header-height);
+    padding-top: env(safe-area-inset-top, 0px);
+    z-index: 30;
+  }
+  .menu-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    width: 44px;
+    height: 44px;
+    padding: 10px;
+    border-radius: 5px;
+  }
+  .nav {
+    display: none;
+    position: fixed;
+    top: var(--mobile-header-height);
+    left: 0;
+    right: 0;
+    padding: 16px max(20px, env(safe-area-inset-right, 0px)) max(20px, env(safe-area-inset-bottom, 0px)) max(20px, env(safe-area-inset-left, 0px));
+    max-height: calc(100vh - var(--mobile-header-height));
+    max-height: calc(100dvh - var(--mobile-header-height));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background: var(--paper);
+    border-bottom: 1px solid var(--line);
+    box-shadow: 0 12px 20px #46382e14;
+    font-size: 16px;
+    z-index: 2;
+  }
+  .nav.open { display: flex; flex-direction: column; align-items: stretch; gap: 5px; }
+  .nav > a { min-height: 48px; padding: 13px 12px; overflow-wrap: anywhere; }
+  .nav > a.active:not(.nav-join)::after { display: none; }
+  .nav > a.active { color: var(--orange); }
+  .nav .nav-join { justify-content: space-between; margin: 7px 0 0; padding: 13px 12px; }
+  .nav .logout { width: 44px; height: 44px; margin: 5px 0 0; }
+  .menu-backdrop {
+    position: fixed;
+    inset: var(--mobile-header-height) 0 0;
+    background: #2d241e66;
+    z-index: 25;
+    cursor: default;
+  }
+  /* At least 16px prevents unwanted input-focus zoom on mobile Safari. */
+  input, textarea, select, .search-field input, .select-field select,
+  .reflection-form textarea, input[type=file] {
+    font-size: 16px;
+    min-height: 48px;
+  }
+  .button, .icon-button, .book-card-meta > .icon-button,
+  .table-actions .icon-button, .tabs button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+  .text-link { min-height: 44px; }
+  .table-actions { gap: 8px; }
+  .tabs { scroll-padding-inline: 10px; overscroll-behavior-x: contain; }
+  .tabs button { padding: 15px 5px; font-size: 14px; }
+  .reader-card h2, .reflection-author a, .my-reflection-head > a, td { overflow-wrap: anywhere; }
+  .site-footer { padding-bottom: env(safe-area-inset-bottom, 0px); }
+}
+
+@media (max-width: 680px) {
+  .container { width: calc(100% - 40px); }
+  .hero h1 { font-size: clamp(2.75rem, 11.5vw, 3.75rem); letter-spacing: -.04em; }
+  .hero-eyebrow { font-size: 10px; letter-spacing: 1.15px; }
+  .hero .hero-art { max-width: min(88%, 340px); margin-top: 8px; }
+  .hero-actions { flex-wrap: wrap; gap: 12px 20px; }
+  .hero-actions .button { font-size: 14px; }
+  .hero-actions .text-link { font-size: 13px; }
+  .hero-footnote { font-size: 12px; }
+  .eyebrow { font-size: 10px; letter-spacing: 1.1px; }
+  .section-head { flex-wrap: wrap; gap: 8px; }
+  .section-head > .text-link { margin: 0; max-width: none; font-size: 13px; }
+  .section-head h2 { font-size: clamp(1.8rem, 7.5vw, 2.15rem); }
+  .section-head .eyebrow { margin-bottom: 8px; }
+  .page-intro h1, .page.narrow > h1, .about-hero h1,
+  .account-intro h1, .book-detail-copy h1 {
+    font-size: clamp(2.2rem, 9.7vw, 3rem);
+  }
+  .page-intro p, .hero-copy > p, .opening-card p, .empty p,
+  .reader-card p, .steps p, .join-banner p, .write-section > div > p,
+  .signin-prompt p, .login-card > p, .my-reflection > p,
+  .privacy-note p, .site-footer p { font-size: 14px; }
+  .form-help, .form-meta { font-size: 12px; }
+  .form-meta { flex-wrap: wrap; }
+  .form-meta > :last-child { margin-left: auto; }
+  .button { font-size: 14px; white-space: normal; padding: 14px 18px; }
+  .form-actions { gap: 12px; }
+  .book-grid { gap: 26px 16px; }
+  .book-cover { padding: 16px 20px; }
+  .book-card-meta { align-items: flex-start; }
+  .book-card-meta > .eyebrow { font-size: 9px; line-height: 1.5; letter-spacing: .35px; padding-top: 8px; }
+  .book-card h3 { font-size: 23px; }
+  .book-card p { font-size: 13px; }
+  .cover-fallback { gap: 12px; }
+  .cover-fallback strong { font-size: 19px; }
+  .cover-fallback span { font-size: 10px; }
+  .book-detail-copy .description { font-size: 16px; }
+  .reflection-body { font-size: 22px; }
+  .reflection-author a { font-size: 14px; }
+  .reflection-author small { font-size: 12px; }
+  .reflection-book { font-size: 13px; line-height: 1.5; }
+  .profile-heading { gap: 16px; padding: 24px 18px; }
+  .profile-heading p { font-size: 14px; }
+  .results-label { font-size: 13px; flex-wrap: wrap; gap: 8px; }
+  .login-page { padding-top: 24px; }
+  .login-art { padding: 25px 24px; }
+  .login-art h2 { font-size: clamp(2rem, 9vw, 2.75rem); }
+  .login-art > svg { margin-bottom: 15px; }
+  .login-art p { font-size: 14px; }
+  .login-card { padding: 28px 22px; }
+  .login-card h1 { font-size: clamp(2rem, 8.5vw, 2.5rem); }
+  .google-button { gap: 9px; padding: 14px 12px; }
+  .footer-links { gap: 8px 18px; }
+  .footer-links a { min-height: 44px; font-size: 13px; }
+  .footer-bottom { font-size: 11px; }
+  .review-card .form-actions .button { font-size: 14px; }
+  .review-body, .my-reflection p { font-size: 15px; }
+  .status { white-space: normal; font-size: 12px; }
+  .my-reflection-head { flex-wrap: wrap; }
+  .my-reflection-head > a { flex-basis: 100%; }
+  .table-scroll { scrollbar-width: thin; }
+  table { min-width: 560px; font-size: 14px; }
+  th { font-size: 11px; }
+  .admin-toolbar .button { font-size: 14px; }
+  .admin-stats { flex-wrap: wrap; }
+  .admin-stats > span { min-width: 95px; font-size: 12px; }
+}
+
+@media (max-width: 480px) {
+  .hero-actions { flex-direction: column; align-items: stretch; }
+  .hero-actions .button, .hero-actions .text-link { justify-content: center; }
+  .reader-grid { grid-template-columns: minmax(0, 1fr); }
+  .opening-card { display: block; padding: 24px; }
+  .opening-card .mini-books { margin: 0 auto 20px; transform: none; width: 105px; }
+  .join-banner { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
+  .join-doodle { display: none; }
+  .join-banner .button { width: 100%; margin-top: 3px; }
+  .form-actions { align-items: stretch; }
+  .form-actions > .button { flex: 1 1 100%; }
+  .account-intro > .button, .profile-editor > .button { width: 100%; }
+  .profile-heading { flex-wrap: wrap; }
+  .profile-heading > div { flex: 1 1 180px; }
+  .book-detail-copy > .button { width: 100%; }
+}

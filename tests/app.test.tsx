@@ -1,13 +1,13 @@
 // @vitest-environment jsdom
 import React, { act } from 'react';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createRoot, type Root } from 'react-dom/client';
 import { MemoryRouter } from 'react-router-dom';
 import { App } from '../src/App';
 let root: Root;
 let host: HTMLDivElement;
 (globalThis as Record<string,unknown>).IS_REACT_ACT_ENVIRONMENT = true;
-afterEach(async () => { if(root) await act(async () => root.unmount()); host?.remove(); });
+afterEach(async () => { if(root) await act(async () => root.unmount()); host?.remove(); vi.unstubAllGlobals(); });
 async function page(path = '/') { host=document.createElement('div'); document.body.append(host); root=createRoot(host); await act(async () => {root.render(<MemoryRouter initialEntries={[path]}><App /></MemoryRouter>);}); }
 async function click(text: string) {const el=Array.from(host.querySelectorAll('a,button')).find(e=>e.textContent?.trim()===text);expect(el).toBeTruthy(); await act(async()=>{(el as HTMLElement).click()});}
 describe('Public site with no invented inventory', () => {
@@ -40,6 +40,51 @@ describe('Public site with no invented inventory', () => {
     expect(toggle.getAttribute('aria-expanded')).toBe('true');
     await click('Sobre Manquepe');
     expect(host.querySelector('h1')?.textContent).toMatch(/Un librero que sigue/);
+    expect(toggle.getAttribute('aria-expanded')).toBe('false');
+  });
+});
+
+describe('Mobile menu interactions', () => {
+  function mobileViewport() {
+    vi.stubGlobal('matchMedia', (query:string) => ({matches:true,media:query,addEventListener(){},removeEventListener(){}}));
+  }
+  it('focuses the navigation and restores focus and scrolling when dismissed with Escape', async () => {
+    mobileViewport();await page();
+    const toggle=host.querySelector<HTMLButtonElement>('button[aria-controls="main-nav"]')!;
+    await act(async()=>toggle.click());
+    expect(document.activeElement).toBe(host.querySelector('#main-nav a'));
+    expect(document.body.style.overflow).toBe('hidden');
+    await act(async()=>document.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true})));
+    expect(toggle.getAttribute('aria-expanded')).toBe('false');
+    expect(document.activeElement).toBe(toggle);
+    expect(document.body.style.overflow).not.toBe('hidden');
+  });
+  it('keeps keyboard focus inside the open mobile navigation', async () => {
+    mobileViewport();await page();
+    const toggle=host.querySelector<HTMLButtonElement>('button[aria-controls="main-nav"]')!;
+    await act(async()=>toggle.click());
+    const links=host.querySelectorAll<HTMLAnchorElement>('#main-nav a');
+    links[links.length-1].focus();
+    await act(async()=>document.dispatchEvent(new KeyboardEvent('keydown',{key:'Tab',bubbles:true,cancelable:true})));
+    expect(document.activeElement).toBe(toggle);
+    await act(async()=>document.dispatchEvent(new KeyboardEvent('keydown',{key:'Tab',shiftKey:true,bubbles:true,cancelable:true})));
+    expect(document.activeElement).toBe(links[links.length-1]);
+  });
+  it('dismisses the menu from the backdrop without navigating away', async () => {
+    mobileViewport();await page();
+    const toggle=host.querySelector<HTMLButtonElement>('button[aria-controls="main-nav"]')!;
+    await act(async()=>toggle.click());
+    const backdrop=host.querySelector<HTMLButtonElement>('button[aria-label="Cerrar menú de navegación"]');
+    expect(backdrop).not.toBeNull();
+    await act(async()=>backdrop!.click());
+    expect(toggle.getAttribute('aria-expanded')).toBe('false');
+    expect(host.querySelector('h1')?.textContent).toMatch(/Una lectura/);
+  });
+  it('closes the menu when the current page is selected again', async () => {
+    mobileViewport();await page('/biblioteca');
+    const toggle=host.querySelector<HTMLButtonElement>('button[aria-controls="main-nav"]')!;
+    await act(async()=>toggle.click());
+    await click('Biblioteca');
     expect(toggle.getAttribute('aria-expanded')).toBe('false');
   });
 });
