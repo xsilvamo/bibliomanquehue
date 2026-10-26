@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
-import { BookOpen, ArrowUpRight, Menu, X, Heart, LogOut, ArrowRight } from 'lucide-react';
+import { ArrowUpRight, Menu, X, Heart, LogOut, ArrowRight } from 'lucide-react';
 import { useStore } from '../lib/store';
 import { backend, contactEmail } from '../lib/backend';
 
@@ -66,7 +66,7 @@ export function Layout({ children }: { children: ReactNode }) {
     <a href="#contenido" className="skip-link">Ir al contenido</a>
     <header className="site-header">
       <div className="container header-inner">
-        <Link to="/" className="brand" aria-label="Manquehue, inicio"><span className="brand-icon"><BookOpen size={25} strokeWidth={1.6} /></span><span>manquehue<span className="brand-dot">.</span></span></Link>
+        <Link to="/" className="brand" aria-label="Manquehue, inicio"><img className="brand-logo" src="/images/logollama.png" alt="" width={44} height={44} decoding="async" /><span>manquehue<span className="brand-dot">.</span></span></Link>
         <button ref={toggleRef} className="menu-toggle" aria-label={open ? 'Cerrar menú' : 'Abrir menú'} aria-expanded={open} aria-controls="main-nav" onClick={() => setOpen(!open)}>{open ? <X /> : <Menu />}</button>
         <nav ref={navRef} id="main-nav" aria-label="Principal" className={open ? 'nav open' : 'nav'} onClick={event => { if ((event.target as Element).closest('a')) setOpen(false); }}>
           <NavLink to="/biblioteca">Biblioteca</NavLink>
@@ -83,7 +83,7 @@ export function Layout({ children }: { children: ReactNode }) {
     <main id="contenido" tabIndex={-1} aria-hidden={mobile && open ? true : undefined}>{children}</main>
     <footer className="site-footer" aria-hidden={mobile && open ? true : undefined}>
       <div className="container footer-top">
-        <div><Link to="/" className="brand"><BookOpen size={25} strokeWidth={1.5} />manquehue.</Link><p>Libros que nos acercan a Cristo.<br />Lecturas que nos acercan entre nosotros.</p></div>
+        <div><Link to="/" className="brand" aria-label="Manquehue, inicio"><img className="brand-logo" src="/images/logollama.png" alt="" width={44} height={44} decoding="async" />manquehue.</Link><p>Libros que nos acercan a Cristo.<br />Lecturas que nos acercan entre nosotros.</p></div>
         <div className="footer-links">
           <Link to="/biblioteca">Explorar el librero <ArrowUpRight size={15} /></Link>
           <Link to="/sobre">Jóvenes Manquehue <ArrowUpRight size={15} /></Link>
