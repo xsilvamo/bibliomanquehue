@@ -1,0 +1,10 @@
+import React,{useState} from 'react';
+import {Send,Loader2} from 'lucide-react';
+import {backend} from '../lib/backend';
+import {characterCount,validateReflection} from '../lib/domain';
+import {Notice} from './ui';
+export function ReflectionForm({bookId,reflectionId,initial='',onSaved,onCancel}:{bookId:string;reflectionId?:string;initial?:string;onSaved:()=>Promise<void>|void;onCancel?:()=>void}){
+ const [body,setBody]=useState(initial);const [busy,setBusy]=useState(false);const [error,setError]=useState('');const [done,setDone]=useState(false);const count=characterCount(body.trim());
+ return <form className="reflection-form" onSubmit={async e=>{e.preventDefault();const invalid=validateReflection(body);if(invalid){setError(invalid);return;}setBusy(true);setError('');setDone(false);try{await backend.rpc('submit_reflection',{p_book_id:bookId,p_body:body.trim(),p_reflection_id:reflectionId??null});setBody('');setDone(true);await onSaved();}catch(e){setError((e as Error).message);}finally{setBusy(false);}}}>
+ <label htmlFor={`reflection-${reflectionId??bookId}`}>{reflectionId?'Editar mi reflexión':'¿Qué dejó esta lectura en ti?'}</label><p className="form-help">Una idea que te acompañó, una pregunta, algo que conectó con tu fe… No hace falta una reseña perfecta.</p><textarea id={`reflection-${reflectionId??bookId}`} rows={6} value={body} onChange={e=>{setBody(e.target.value);setDone(false);}} placeholder="Después de leer este libro…" required aria-describedby={`count-${reflectionId??bookId}`}/><div className="form-meta"><span>Se publicará después de la revisión.</span><span id={`count-${reflectionId??bookId}`} className={count>1500?'field-error':''} aria-live="polite">{count}/1500</span></div>{error&&<Notice error>{error}</Notice>}{done&&<Notice>Tu reflexión quedó pendiente de revisión. Puedes seguir su estado en Mi espacio.</Notice>}<div className="form-actions"><button className="button" disabled={busy||count<1||count>1500}>{busy?<Loader2 size={17} className="spin"/>:<Send size={17}/>}Enviar a revisión</button>{onCancel&&<button type="button" className="button secondary" onClick={onCancel}>Cerrar</button>}</div></form>;
+}
