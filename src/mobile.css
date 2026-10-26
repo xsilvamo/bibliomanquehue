@@ -1,4 +1,26 @@
 /* Loaded after the base design. Keep real content in view instead of hiding overflow. */
+/* The supplied logo includes a white background; frame it without altering the image. */
+.brand-logo {
+  display: block;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  object-fit: contain;
+  border-radius: 12px;
+  background: #fff;
+}
+.login-art .login-logo {
+  display: block;
+  width: 76px;
+  height: 76px;
+  object-fit: contain;
+  border-radius: 18px;
+  background: #fff;
+  margin-bottom: 28px;
+}
+@media (max-width: 680px) {
+  .header-inner .brand-logo { width: 36px; height: 36px; border-radius: 10px; }
+}
 html { -webkit-text-size-adjust: 100%; }
 .button, input, textarea, select { max-width: 100%; }
 h1, h2, h3, .book-author, .reflection-book, .footer-invite { overflow-wrap: anywhere; }
@@ -124,7 +146,7 @@ h1, h2, h3, .book-author, .reflection-book, .footer-invite { overflow-wrap: anyw
   .login-page { padding-top: 24px; }
   .login-art { padding: 25px 24px; }
   .login-art h2 { font-size: clamp(2rem, 9vw, 2.75rem); }
-  .login-art > svg { margin-bottom: 15px; }
+  .login-art .login-logo { width: 60px; height: 60px; margin-bottom: 20px; }
   .login-art p { font-size: 14px; }
   .login-card { padding: 28px 22px; }
   .login-card h1 { font-size: clamp(2rem, 8.5vw, 2.5rem); }

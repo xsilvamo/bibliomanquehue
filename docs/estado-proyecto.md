@@ -81,3 +81,9 @@ Verificación del cambio móvil: 36 pruebas aprobadas, compilación correcta y r
 El responsable aclaró que «Manquehue» es el nombre correcto del sitio. Se actualizan el logotipo tipográfico del encabezado y pie, navegación, títulos de pestaña, descripción, bienvenida, textos públicos y administrativos y nombres de nuevas exportaciones. La documentación adopta el nombre corregido.
 
 El repositorio, proyecto Supabase, hostname Pages, referencias del subdominio anterior, migración ya aplicada y claves internas de sesión conservan sus identificadores existentes para mantener las conexiones y el historial. Renombrar servicios o direcciones externas requiere una tarea separada y actualizar las redirecciones OAuth. Si Google todavía muestra el nombre anterior en el consentimiento, ajustar el nombre público de la aplicación en Google Auth Platform desde la cuenta responsable.
+
+## Logotipo aportado por el responsable — 26 de octubre de 2026
+
+Se utiliza `public/images/logollama.png` como logotipo en encabezado, pie y pantalla de acceso, y como favicon y apple-touch-icon. La imagen original de 1254 × 1254 px se conserva sin modificar. Como incluye fondo blanco, los componentes la presentan en un marco blanco con bordes suaves. El nombre textual Manquehue acompaña al símbolo en la navegación.
+
+El icono anterior de libro de la pestaña fue retirado. Los iconos de libros, listas y otras acciones siguen representando sus funciones y no se sustituyen por el logotipo. Si en el futuro se entrega una versión transparente u optimizada, actualizar las referencias del logo y las dimensiones del favicon manteniendo la accesibilidad y proporciones.
