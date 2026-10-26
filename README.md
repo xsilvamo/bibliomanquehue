@@ -1,95 +1,100 @@
 # Manquepe
 
-Web de Jóvenes Manquehue: catálogo del **librero físico**, perfiles públicos, listas «Quiero leer» y reflexiones con moderación. No contiene libros ni testimonios ficticios, préstamos, puntuaciones, PDF ni descargas de libros.
+**Libros que nos acercan a Cristo.** Web de Jóvenes Manquehue para descubrir los libros de su librero físico y compartir lecturas en comunidad.
+
+La primera versión incluye catálogo, búsqueda, fichas, acceso por invitación con Google, perfiles y listas «Quiero leer» públicos, reflexiones moderadas y panel de encargados. No incluye PDF, préstamos, disponibilidad, estrellas ni citas favoritas.
+
+## Estado y documentación
+
+El código ya está respaldado en [GitHub](https://github.com/xsilvamo/manquepe). El responsable creó la organización y el proyecto `manquepe` en Supabase, aplicó la migración inicial con la CLI y configuró las credenciales del proveedor Google. También probó el sitio y expresó conformidad con el resultado. Esto no equivale a haber completado todos los recorridos del piloto.
+
+| Documento | Para qué sirve |
+| --- | --- |
+| [Estado y próximos pasos](docs/estado-proyecto.md) | Avances confirmados, pendientes y punto de continuación |
+| [Configuración](docs/configuracion.md) | Supabase, Google, variables y primer administrador |
+| [Arquitectura](docs/arquitectura.md) | Pantallas, datos, permisos y flujo de moderación |
+| [Desarrollo y respaldo](docs/desarrollo.md) | Retomar en otro equipo, GitHub, migraciones, pruebas y publicación |
+| [Guía de encargados](docs/guia-encargados.md) | Libros, invitaciones, moderación y recuperación de datos |
+| [Piloto](docs/piloto.md) | Comprobaciones antes de abrir a la comunidad |
+| [Textos para validar](docs/contenidos.md) | Borradores institucionales y de convivencia |
+| [Plan inicial](docs/superpowers/plans/2026-10-25-manquepe.md) | Alcance y decisiones originales |
 
 ## Abrir localmente
 
-Requiere Node.js 22 o posterior y npm.
+Requiere Node.js 22 o posterior y npm. Desde la carpeta del proyecto:
 
 ```sh
 npm ci
+```
+
+Si aún no tienes `.env`, crea una copia de la plantilla. **Si ya existe, conserva sus valores:**
+
+```sh
 cp .env.example .env
+```
+
+Completa las variables y ejecuta:
+
+```sh
 npm run dev
 ```
 
-Abre la dirección que imprime Vite. Sin configurar Supabase puedes recorrer las pantallas públicas y los estados vacíos. El acceso con Google permanece deshabilitado: no existe un inicio de sesión de demostración ni una cuenta administrativa incorporada.
-
-Variables públicas de compilación:
+Abre la dirección indicada por Vite, normalmente `http://127.0.0.1:5173`. Sin Supabase configurado se pueden recorrer las pantallas públicas y sus estados vacíos, pero no iniciar sesión ni guardar datos.
 
 | Variable | Valor |
 | --- | --- |
-| `VITE_SUPABASE_URL` | URL HTTPS del proyecto Supabase |
-| `VITE_SUPABASE_ANON_KEY` | Clave pública `anon` o publishable, nunca service role |
-| `VITE_CONTACT_EMAIL` | Correo real de contacto validado por la comunidad |
+| `VITE_SUPABASE_URL` | URL HTTPS del proyecto remoto |
+| `VITE_SUPABASE_ANON_KEY` | Clave pública **legacy `anon` JWT**, compatible con el cliente REST actual |
+| `VITE_CONTACT_EMAIL` | Correo real de contacto del proyecto |
 
-**No pongas contraseñas, secretos OAuth ni claves service role en variables VITE.** El cliente usa las APIs REST oficiales de Supabase para Auth PKCE, PostgREST y Storage. El secreto de Google se configura únicamente en Supabase.
+Nunca incluyas contraseñas, secretos OAuth, tokens personales ni claves `service_role` en `.env` del frontend o en GitHub. Las variables `VITE_` se incorporan al navegador al compilar. El Client Secret de Google se conserva en el proveedor de Supabase.
 
-## Configurar Supabase y Google
-
-1. Crea un proyecto gratuito de Supabase bajo una cuenta de los responsables.
-2. Ejecuta completo `supabase/migrations/202610250001_manquepe.sql` en el SQL Editor. Es una migración inicial, para un proyecto nuevo; no la vuelvas a ejecutar sobre las mismas tablas.
-3. En Authentication, desactiva el proveedor de correo/contraseña y los accesos anónimos. Habilita Google. El registro OAuth debe estar permitido: la lista de invitaciones, el hook y el trigger restringen quién puede registrarse.
-4. En Auth Hooks configura **Before User Created → PostgreSQL → public.before_user_created**. La función solo puede ejecutarla `supabase_auth_admin`. El trigger también bloquea las cuentas no invitadas si falta el hook, aunque el mensaje puede ser menos amigable.
-5. En Google Cloud crea un cliente OAuth de tipo Web para el proyecto. Usa la URL de callback que muestra Supabase, normalmente `https://PROYECTO.supabase.co/auth/v1/callback`. Configura la pantalla de consentimiento y sus usuarios de prueba si está en modo Testing.
-6. Copia el Client ID y Client Secret de Google al proveedor Google en Supabase. No los copies al repositorio.
-7. En Supabase URL Configuration fija el Site URL final y permite explícitamente las redirecciones `http://localhost:5173/entrar`, `http://127.0.0.1:5173/entrar` y `https://TU-SITIO.pages.dev/entrar`. No uses comodines amplios en producción.
-8. Completa `.env` con la URL, la clave pública y el correo. Reinicia Vite o recompila cuando cambien estas variables.
-
-Referencias: [Google con Supabase](https://supabase.com/docs/guides/auth/social-sign-in/auth-google), [PKCE](https://supabase.com/docs/guides/auth/sessions/pkce-flow), [Auth Hooks](https://supabase.com/docs/guides/auth/auth-hooks), [RLS](https://supabase.com/docs/guides/database/postgres/row-level-security).
-
-### Primer encargado
-
-Antes de su primer acceso, autoriza su correo desde el SQL Editor, reemplazando el ejemplo:
-
-```sql
-insert into public.invitations(email)
-values ('correo-real@gmail.com')
-on conflict(email) do update set active=true;
-```
-
-La persona entra con Google y elige un alias en `/mi-espacio`. Después, desde el SQL Editor:
-
-```sql
-update public.memberships
-set role='admin'
-where user_id = (
-  select id from auth.users where lower(email)='correo-real@gmail.com'
-);
-```
-
-La persona actualiza la página y abre `/admin`. Repite para el segundo encargado. Los roles se asignan exclusivamente desde SQL, nunca desde un formulario de lectores.
+La implementación REST actual también envía la clave pública como Bearer cuando no hay sesión; por eso este proyecto utiliza `anon` JWT. Cambiar a una clave `sb_publishable_...` requiere adaptar y probar ese manejo de cabeceras primero. Véase [configuración](docs/configuracion.md).
 
 ## Verificación
 
+Las pruebas públicas incluyen el caso de sitio sin configurar. Para aislarlas del Supabase real aunque tengas `.env`, ejecuta en Linux/macOS:
+
 ```sh
-npm test
+VITE_SUPABASE_URL= VITE_SUPABASE_ANON_KEY= VITE_CONTACT_EMAIL= npm test
 npm run build
-# Opcional: requiere Chrome/Chromium instalado y permiso para abrir puertos locales
+```
+
+La última verificación de esta entrega documental pasó **32 pruebas** y la compilación de producción. La suite SQL ejecuta la migración y sus permisos sobre PostgreSQL mediante PGlite, con infraestructura mínima de Auth y Storage preparada para pruebas. No sustituye la integración con Supabase alojado.
+
+Con Chrome/Chromium instalado y permiso para abrir puertos locales:
+
+```sh
 npm run test:e2e
 ```
 
-Puedes indicar otro ejecutable con `BROWSER_BIN=/ruta/a/chromium npm run test:e2e`. El smoke test usa Chrome DevTools y genera capturas de escritorio y móvil en `/tmp/`; no descarga navegadores.
+El smoke test usa Chrome DevTools y genera capturas en `/tmp/manquepe-escritorio.png` y `/tmp/manquepe-movil.png`. Puedes elegir otro ejecutable con `BROWSER_BIN=/ruta/a/chromium npm run test:e2e`. No descarga navegadores. En la sesión inicial del agente, el entorno bloqueó los sockets y el arranque de Chrome; la prueba manual posterior del responsable se registra por separado en [estado](docs/estado-proyecto.md).
 
-Las pruebas usan PostgreSQL real mediante PGlite para ejecutar la migración y sus políticas RLS. Solo los esquemas externos `auth` y `storage` se preparan como infraestructura mínima de prueba; se usan los roles `anon`, `authenticated` y `supabase_auth_admin`. No sustituyen una prueba de integración contra Supabase alojado.
+## Cambios en Supabase
 
-Las pruebas también verifican búsqueda sin tildes, importación CSV, límites Unicode, estados vacíos, navegación, privacidad explicada antes del acceso, PKCE y errores de API, y conservación de borradores durante actualizaciones de fondo.
+La migración `supabase/migrations/202610250001_manquepe.sql` **ya se aplicó al proyecto remoto**. No la ejecutes otra vez pegándola en SQL Editor ni modifiques su contenido para hacer cambios nuevos.
 
-La comprobación de navegador real, con Google y un proyecto Supabase configurado, se realiza con la lista de `docs/piloto.md`. Este entorno de implementación bloquea sockets locales y el arranque de Chrome: no se ha certificado visualmente en un navegador real ni probado OAuth contra credenciales reales.
+Después de vincular tu carpeta al proyecto, comprueba historial y futuras migraciones con:
 
-## Publicar en Cloudflare Pages
+```sh
+npx supabase migration list --linked
+npx supabase db push --linked --dry-run
+```
 
-1. Guarda el proyecto en un repositorio bajo control de los responsables. Si tu carpeta de trabajo todavía no tiene Git inicializado, inicialízalo o clona el respaldo Git antes de conectar el repositorio.
-2. En Cloudflare Pages crea un proyecto conectado a ese repositorio.
-3. Configura `npm run build` como comando y `dist` como directorio de salida; Node.js 22 o posterior.
-4. Añade las tres variables VITE en la configuración de compilación. Recompila cada vez que cambien.
-5. Actualiza Site URL y redirecciones de Supabase con la dirección definitiva `pages.dev` y completa la configuración de Google.
-6. Verifica las rutas `/biblioteca`, `/entrar` y `/admin` al abrirlas directamente. `_redirects` permite la navegación SPA y `_headers` configura cabeceras de seguridad para Pages.
-7. Sigue `docs/piloto.md` antes de compartir el enlace.
+Para aplicar únicamente las migraciones pendientes revisadas:
 
-No se ha creado una cuenta externa ni publicado el sitio. Faltan las cuentas/credenciales de los responsables, el inventario real y la aprobación de los textos institucionales.
+```sh
+npx supabase db push --linked
+```
 
-## Operación y costo
+Usamos `--linked` explícitamente para identificar el destino remoto. La [guía de desarrollo](docs/desarrollo.md) describe cómo crear migraciones nuevas y cómo preparar la futura automatización con GitHub. La integración automática todavía no se ha confirmado.
 
-Consulta `docs/guia-encargados.md`. El plan gratuito de Supabase tiene límites y puede pausarse después de una semana de poca actividad. No se implementaron peticiones artificiales para evitar la pausa ni contratación automática de servicios pagados. [Límites y precios oficiales](https://supabase.com/pricing).
+## Publicación y operación
 
-La tipografía se sirve desde el propio sitio, sin Google Fonts ni solicitudes de seguimiento. Las licencias de Red Hat Text y Nimbus Roman están en `public/fonts/`.
+El destino previsto es Cloudflare Pages: comando `npm run build`, salida `dist`, Node.js 22 o posterior y las tres variables VITE configuradas en el alojamiento. Falta confirmar/publicar la URL final y ajustar las redirecciones de Supabase. Sigue [desarrollo y publicación](docs/desarrollo.md) y después [piloto](docs/piloto.md).
+
+GitHub conserva código y migraciones; los usuarios, libros cargados, reflexiones, secretos y portadas subidas a Supabase requieren respaldos separados. Consulta la [guía de encargados](docs/guia-encargados.md).
+
+Se pretende empezar con planes gratuitos; sus límites se revisan antes de publicar y ampliar el uso. No hay contratación automática de servicios pagados. [Precios de Supabase](https://supabase.com/pricing).
+
+Las fuentes se sirven desde el propio sitio. Sus licencias están en `public/fonts/`.

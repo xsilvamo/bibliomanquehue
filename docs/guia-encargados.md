@@ -1,5 +1,7 @@
 # Guía de encargados
 
+Para instalar o retomar el proyecto, consulta [configuración](configuracion.md), [desarrollo y respaldo del código](desarrollo.md) y [estado vigente](estado-proyecto.md). Esta guía describe la operación del contenido y el respaldo de datos.
+
 ## Preparar el librero
 
 Descarga `public/inventario-plantilla.csv` o usa «Importar CSV» en Administración → Libros. La plantilla solo contiene encabezados; no hay libros ficticios para borrar.
@@ -31,7 +33,7 @@ Revocar una invitación impide crear una cuenta con ese correo, pero no elimina 
 
 ## Moderar reflexiones
 
-Los aportes se muestran en Por revisar. Lee el texto completo y consulta las alertas de lenguaje: son pistas, no una decisión automática. La lista inicial de palabras incluye variantes habituales de groserías chilenas y se puede ampliar en la función SQL `submit_reflection`.
+Los aportes se muestran en Por revisar. Lee el texto completo y consulta las alertas de lenguaje: son pistas, no una decisión automática. La lista inicial de palabras incluye variantes habituales de groserías chilenas. Para ampliarla, el equipo debe crear una migración nueva que actualice `submit_reflection` y sus pruebas; no editar la migración inicial ya aplicada.
 
 - Aprobar publica el texto en su libro y perfil.
 - Rechazar requiere un motivo respetuoso, visible para el autor en Mi espacio.

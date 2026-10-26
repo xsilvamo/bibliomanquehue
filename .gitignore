@@ -11,3 +11,6 @@ test-results/
 .codex/
 .aws/
 respaldos/
+
+backups/
+manquepe-respaldo-*.json

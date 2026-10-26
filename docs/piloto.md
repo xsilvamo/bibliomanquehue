@@ -1,5 +1,9 @@
 # Piloto de Manquepe
 
+## Punto de partida registrado
+
+El responsable ya subió el código a GitHub, creó el proyecto Supabase, aplicó la migración inicial y configuró las credenciales de Google. También probó el sitio y expresó conformidad. La lista siguiente conserva sus casillas sin marcar hasta comprobar cada caso; no implica repetir la migración ni recrear servicios. Consulta `docs/estado-proyecto.md`.
+
 ## Material pendiente de la comunidad
 
 - [ ] Validar textos de `docs/contenidos.md`, nombre, lema y diseño.
@@ -7,7 +11,7 @@
 - [ ] Registrar al menos cinco libros físicos reales con sus portadas y descripciones.
 - [ ] Elegir 1–2 encargados y autorizar sus cuentas.
 - [ ] Invitar a 5–10 lectores y explicar que perfiles y listas serán públicos.
-- [ ] Configurar Supabase, Google y Cloudflare Pages siguiendo el README.
+- [ ] Verificar la configuración existente de Supabase/Google y completar la publicación en Cloudflare Pages siguiendo `docs/configuracion.md` y `docs/desarrollo.md`.
 
 ## Recorridos con cuentas reales
 
