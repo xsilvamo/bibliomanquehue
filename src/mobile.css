@@ -1,25 +1,23 @@
 /* Loaded after the base design. Keep real content in view instead of hiding overflow. */
-/* The supplied logo includes a white background; frame it without altering the image. */
+/* Preserve the supplied transparent logo without adding a background or clipping it. */
 .brand-logo {
   display: block;
   width: 44px;
   height: 44px;
   flex-shrink: 0;
   object-fit: contain;
-  border-radius: 12px;
-  background: #fff;
+  background: transparent;
 }
 .login-art .login-logo {
   display: block;
   width: 76px;
   height: 76px;
   object-fit: contain;
-  border-radius: 18px;
-  background: #fff;
+  background: transparent;
   margin-bottom: 28px;
 }
 @media (max-width: 680px) {
-  .header-inner .brand-logo { width: 36px; height: 36px; border-radius: 10px; }
+  .header-inner .brand-logo { width: 36px; height: 36px; }
 }
 html { -webkit-text-size-adjust: 100%; }
 .button, input, textarea, select { max-width: 100%; }
