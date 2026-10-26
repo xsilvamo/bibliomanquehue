@@ -38,7 +38,7 @@ describe('Public site with no invented inventory', () => {
     const toggle=host.querySelector<HTMLButtonElement>('button[aria-label="Abrir menú"]')!;
     await act(async()=>toggle.click());
     expect(toggle.getAttribute('aria-expanded')).toBe('true');
-    await click('Sobre Manquepe');
+    await click('Sobre Manquehue');
     expect(host.querySelector('h1')?.textContent).toMatch(/Un librero que sigue/);
     expect(toggle.getAttribute('aria-expanded')).toBe('false');
   });

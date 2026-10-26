@@ -55,7 +55,7 @@ git diff --cached --name-only
 Comprueba que la lista no incluya `.env`, secretos, carpetas `.temp` ni respaldos con datos. Revisa también el contenido preparado con `git diff --cached`. Luego:
 
 ```sh
-git commit -m "docs: documentar configuración y continuidad de Manquepe"
+git commit -m "docs: documentar configuración y continuidad de Manquehue"
 git push origin main
 ```
 
@@ -143,7 +143,7 @@ Los casos de aceptación de comunidad y administración están en `docs/piloto.m
 
 ## Publicar en Cloudflare Pages
 
-1. Conecta el repositorio GitHub de Manquepe a un proyecto de Cloudflare Pages de los responsables.
+1. Conecta el repositorio GitHub de Manquehue a un proyecto de Cloudflare Pages de los responsables.
 2. Configura rama de producción `main`, comando `npm run build`, salida `dist` y Node.js 22 o posterior.
 3. Agrega `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` y `VITE_CONTACT_EMAIL` como variables de compilación. No agregues el Client Secret de Google ni claves administrativas.
 4. Publica y registra la URL real en `docs/estado-proyecto.md` cuando esté verificada.

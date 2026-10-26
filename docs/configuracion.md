@@ -18,7 +18,7 @@ El Project Reference es el identificador de `https://supabase.com/dashboard/proj
 
 ## Instalación en un proyecto remoto nuevo
 
-Solo para recrear Manquepe en otro proyecto nuevo y vacío:
+Solo para recrear Manquehue en otro proyecto nuevo y vacío:
 
 1. Crea el proyecto en Supabase bajo una cuenta de sus responsables.
 2. Clona el repositorio y ejecuta los comandos de vinculación anteriores con el nuevo Project Reference.
@@ -48,7 +48,7 @@ Referencia: [Auth Hooks](https://supabase.com/docs/guides/auth/auth-hooks).
 
 El responsable ya indicó que guardó Client ID y Client Secret en Supabase. Para revisar o recrear esa configuración:
 
-1. En Google Cloud, configura la pantalla de consentimiento de Manquepe y crea un cliente OAuth de tipo Aplicación web.
+1. En Google Cloud, configura la pantalla de consentimiento de Manquehue y crea un cliente OAuth de tipo Aplicación web.
 2. Usa audiencia externa si participarán cuentas personales de Google. Si está en modo de prueba, incluye las cuentas de prueba correspondientes.
 3. En URI de redirección autorizados del cliente Google, utiliza exactamente la Callback URL mostrada por Supabase:
 

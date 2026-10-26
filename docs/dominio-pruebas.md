@@ -101,7 +101,7 @@ En Google Cloud conserva la Callback URL de Supabase:
 https://TU_PROJECT_REFERENCE.supabase.co/auth/v1/callback
 ```
 
-No la reemplaces por el subdominio web. Si el consentimiento OAuth sigue en modo de prueba, los participantes deben ser usuarios de prueba de Google además de estar invitados en Manquepe.
+No la reemplaces por el subdominio web. Si el consentimiento OAuth sigue en modo de prueba, los participantes deben ser usuarios de prueba de Google además de estar invitados en Manquehue.
 
 Para probar OAuth, abre el enlace del subdominio directamente en Safari o Chrome. Los navegadores incrustados de algunas aplicaciones pueden impedir el acceso Google. El mismo origen debe iniciar y completar el flujo PKCE.
 

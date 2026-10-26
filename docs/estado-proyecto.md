@@ -4,7 +4,7 @@ Actualizado: **25 de octubre de 2026**. Este documento distingue la implementaci
 
 ## Objetivo y decisiones vigentes
 
-Manquepe conecta el librero físico de Jóvenes Manquehue con una comunidad de lectores. El nombre, lema «Libros que nos acercan a Cristo», identidad católica y manquehuina y estética juvenil en crema, naranjo y madera forman parte del alcance acordado.
+Manquehue conecta el librero físico de Jóvenes Manquehue con una comunidad de lectores. El nombre, lema «Libros que nos acercan a Cristo», identidad católica y manquehuina y estética juvenil en crema, naranjo y madera forman parte del alcance acordado.
 
 El catálogo contiene únicamente libros físicos del librero. El sitio es público; la participación requiere invitación y cuenta Google. Alias, descripción, lista «Quiero leer» y reflexiones aprobadas son públicos. El correo no se publica. No hay PDFs, préstamos, disponibilidad, estrellas ni citas en esta versión.
 
@@ -75,3 +75,9 @@ El responsable solicitó mejorar el uso en teléfonos y preparar un subdominio d
 Se añadieron ajustes móviles para campos, objetivos táctiles, encabezados, tarjetas, tablas y navegación, además de cuatro regresiones del menú. El procedimiento de despliegue y verificación está en `docs/dominio-pruebas.md`. La carpeta local `.obsidian/` se mantiene fuera de este cambio. La migración y los datos de Supabase no cambian.
 
 Verificación del cambio móvil: 36 pruebas aprobadas, compilación correcta y revisión de código sin hallazgos importantes. El smoke test real sigue bloqueado por `listen EPERM` en esta sesión; el diseño debe revisarse en dispositivos/navegador al desplegar. El subdominio no se marca como activo hasta verificarlo en Cloudflare.
+
+## Corrección del nombre — 26 de octubre de 2026
+
+El responsable aclaró que «Manquehue» es el nombre correcto del sitio. Se actualizan el logotipo tipográfico del encabezado y pie, navegación, títulos de pestaña, descripción, bienvenida, textos públicos y administrativos y nombres de nuevas exportaciones. La documentación adopta el nombre corregido.
+
+El repositorio, proyecto Supabase, hostname Pages, referencias del subdominio anterior, migración ya aplicada y claves internas de sesión conservan sus identificadores existentes para mantener las conexiones y el historial. Renombrar servicios o direcciones externas requiere una tarea separada y actualizar las redirecciones OAuth. Si Google todavía muestra el nombre anterior en el consentimiento, ajustar el nombre público de la aplicación en Google Auth Platform desde la cuenta responsable.
