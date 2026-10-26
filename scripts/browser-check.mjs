@@ -39,11 +39,11 @@ try{
  assert.ok(await evaluate("!!document.querySelector('input[aria-label=\"Buscar por título o autor\"]')"));
  await page('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});
  assert.equal(await evaluate('document.documentElement.scrollWidth<=window.innerWidth'),true,'Desbordamiento horizontal');
- await evaluate("document.querySelector('button[aria-label=\"Abrir menú\"]').click()");
- assert.equal(await evaluate("document.querySelector('button[aria-label=\"Abrir menú\"]').getAttribute('aria-expanded')"),'true');
+ await evaluate("document.querySelector('button[aria-controls=\"main-nav\"]').click()");
+ assert.equal(await evaluate("document.querySelector('button[aria-controls=\"main-nav\"]').getAttribute('aria-expanded')"),'true');
  await evaluate("document.querySelector('nav a[href=\"/sobre\"]').click()");
  await until("document.querySelector('h1')?.textContent.includes('Un librero que sigue')");
- assert.equal(await evaluate("document.querySelector('button[aria-label=\"Abrir menú\"]').getAttribute('aria-expanded')"),'false');
+ assert.equal(await evaluate("document.querySelector('button[aria-controls=\"main-nav\"]').getAttribute('aria-expanded')"),'false');
  await page('Page.navigate',{url:origin+'/entrar'});
  await until("document.querySelector('h1')?.textContent==='Entra a la comunidad'");
  assert.ok(await evaluate("document.body.textContent.includes('Tu alias, descripción, reflexiones aprobadas y lista')"));
@@ -51,6 +51,32 @@ try{
  await until("document.querySelector('h1')?.textContent.includes('Una lectura')");
  await evaluate('document.fonts.ready');
  await writeFile('/tmp/manquepe-movil.png',Buffer.from((await page('Page.captureScreenshot',{format:'png',captureBeyondViewport:false})).data,'base64'));
+ // Exercise every public layout at narrow phones, landscape and tablet widths.
+ const routes=[['/','Una lectura'],['/biblioteca','Nuestra biblioteca'],['/reflexiones','Lo que queda'],['/lectores','Quienes hacen'],['/sobre','Un librero'],['/entrar','Entra a la comunidad'],['/contacto','Hablemos'],['/convivencia','Convivencia y privacidad']];
+ for(const width of [320,360,390,430,568,768,1024]){
+  await page('Emulation.setDeviceMetricsOverride',{width,height:width===568?320:844,deviceScaleFactor:1,mobile:true});
+  for(const [route,title] of routes){
+   await page('Page.navigate',{url:origin+route});
+   await until(`document.querySelector('h1')?.textContent.includes(${JSON.stringify(title)})`);
+   await evaluate('document.fonts.ready.then(()=>true)');
+   assert.equal(await evaluate('document.documentElement.scrollWidth<=window.innerWidth+1'),true,`Desbordamiento en ${route}, ${width}px`);
+   if(width<=1000){
+    const badInputs=await evaluate("Array.from(document.querySelectorAll('input:not([type=checkbox]),textarea,select')).filter(el=>parseFloat(getComputedStyle(el).fontSize)<16).map(el=>el.getAttribute('aria-label')||el.id||el.tagName)");
+    assert.deepEqual(badInputs,[],`Campos demasiado pequeños en ${route}, ${width}px`);
+    const badTargets=await evaluate("Array.from(document.querySelectorAll('.button,.icon-button,.menu-toggle,.tabs button')).filter(el=>{const r=el.getBoundingClientRect();return r.width>0&&r.height>0&&(r.width<43.5||r.height<43.5)}).map(el=>el.getAttribute('aria-label')||el.textContent.trim())");
+    assert.deepEqual(badTargets,[],`Controles táctiles pequeños en ${route}, ${width}px`);
+   }
+  }
+ }
+ await page('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});
+ await page('Page.navigate',{url:origin+'/biblioteca'});
+ await until("document.querySelector('h1')?.textContent==='Nuestra biblioteca'");
+ await evaluate("document.querySelector('button[aria-controls=\"main-nav\"]').click()");
+ await until("document.body.style.overflow==='hidden'");
+ assert.equal(await evaluate("document.activeElement===document.querySelector('#main-nav a')"),true);
+ await page('Input.dispatchKeyEvent',{type:'keyDown',key:'Escape',code:'Escape'});
+ await until("document.querySelector('button[aria-controls=\"main-nav\"]').getAttribute('aria-expanded')==='false'");
+ assert.equal(await evaluate("document.activeElement===document.querySelector('button[aria-controls=\"main-nav\"]')"),true);
  assert.deepEqual(errors,[],'Errores JavaScript del navegador');
  console.log('Smoke test correcto. Capturas: /tmp/manquepe-escritorio.png y /tmp/manquepe-movil.png');
 }catch(error){console.error('No se completó la comprobación de navegador:',error.message);process.exitCode=1;}
