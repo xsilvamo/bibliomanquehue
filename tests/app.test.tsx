@@ -21,7 +21,7 @@ describe('Public site with no invented inventory', () => {
   });
   it('explains public profiles before sign-in and does not simulate authentication', async () => {
     await page('/entrar');
-    expect(host.textContent).toContain('Tu alias, descripción, reflexiones aprobadas y lista');
+    expect(host.textContent).toContain('Tu nombre y apellido, descripción, reflexiones aprobadas y lista');
     const button=Array.from(host.querySelectorAll('button')).find(e=>e.textContent?.includes('Continuar con Google'));
     expect(button?.disabled).toBe(true);
   });

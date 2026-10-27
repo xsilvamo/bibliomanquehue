@@ -1,6 +1,6 @@
 import { beforeAll, afterAll, describe, it, expect } from 'vitest';
 import { PGlite } from '@electric-sql/pglite';
-import { readFileSync, existsSync } from 'node:fs';
+import { bootstrapDatabase } from './helpers/database';
 
 const db = new PGlite();
 const admin = '00000000-0000-4000-8000-000000000001';
@@ -14,21 +14,7 @@ async function as<T = Record<string, unknown>>(id: string | null, sql: string, p
   finally { await db.exec('reset role'); }
 }
 beforeAll(async () => {
-  await db.exec(`
-    create role anon; create role authenticated; create role supabase_auth_admin;
-    create schema auth; create schema storage;
-    create table auth.users (id uuid primary key, email text, raw_user_meta_data jsonb default '{}');
-    create function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('request.jwt.claim.sub', true), '')::uuid $$;
-    grant usage on schema auth to anon, authenticated;
-    grant execute on function auth.uid() to anon, authenticated;
-    create table storage.buckets(id text primary key, name text, public boolean, file_size_limit bigint, allowed_mime_types text[]);
-    create table storage.objects(id uuid default gen_random_uuid(), bucket_id text, name text, owner_id text);
-    alter table storage.objects enable row level security;
-    grant usage on schema storage to anon, authenticated;
-    grant select, insert, update, delete on storage.objects to anon, authenticated;
-  `);
-  const path = 'supabase/migrations/202610250001_manquepe.sql';
-  if (existsSync(path)) await db.exec(readFileSync(path, 'utf8'));
+  await bootstrapDatabase(db);
 });
 afterAll(() => db.close());
 
@@ -133,6 +119,87 @@ describe.sequential('Database authorization and publishing workflow', () => {
     await as(admin,'select public.import_books($1::jsonb)',[JSON.stringify(payload.slice(0,1))]);
     expect(await as(null,"select * from public.books where title='Nuevo libro'")).toHaveLength(1);
   });
+  it('uses explicit first and last names for the public alias and allows full homonyms', async () => {
+    await as(ana,'select public.save_reader_profile($1,$2,$3)',['  Ana  María ',' Pérez  Soto ','Lectora']);
+    const [profile]=await as<{alias:string;first_name:string;last_name:string}>(ana,'select * from public.profiles where id=$1',[ana]);
+    expect(profile.alias).toBe('Ana María Pérez Soto');
+    expect(profile.first_name).toBe('Ana María');
+    expect(profile.last_name).toBe('Pérez Soto');
+    await as(ben,'select public.save_reader_profile($1,$2,$3)',['Ana María','Pérez Soto','Otro lector']);
+    expect(await as(null,"select id from public.profiles where alias='Ana María Pérez Soto'")).toHaveLength(2);
+  });
+  it('rejects missing names and oversized fields without changing another account', async () => {
+    for(const [first,last] of [['','Pérez'],['Ana','  '],['x'.repeat(61),'Pérez'],['Ana','x'.repeat(81)]]) {
+      await expect(as(ana,'select public.save_reader_profile($1,$2,$3)',[first,last,''])).rejects.toThrow();
+    }
+    await expect(as(null,'select public.save_reader_profile($1,$2,$3)',['Ana','Pérez',''])).rejects.toThrow();
+    await expect(as(ana,'select public.save_reader_profile($1,$2,$3)',['Ana','Pérez','x'.repeat(301)])).rejects.toThrow();
+    expect((await as<{bio:string}>(ben,'select bio from public.profiles where id=$1',[ben]))[0].bio).toBe('Otro lector');
+  });
+  it('keeps the full name consistent when an older client edits the legacy alias', async () => {
+    await as(ana,'select public.save_profile($1,$2)',['Alias antiguo','Bio actualizada']);
+    expect((await as<{alias:string}>(ana,'select alias from public.profiles where id=$1',[ana]))[0].alias).toBe('Ana María Pérez Soto');
+  });
+  it('counts a finished book only once per reader without publishing individual reading records', async () => {
+    await as(ana,'select public.set_book_read($1,true)',[book]);
+    await as(ana,'select public.set_book_read($1,true)',[book]);
+    expect((await as<{read_count:number}>(null,'select * from public.get_book_read_counts() where book_id=$1',[book]))[0].read_count).toBe(1);
+    await as(ben,'select public.set_book_read($1,true)',[book]);
+    expect((await as<{read_count:number}>(null,'select * from public.get_book_read_counts() where book_id=$1',[book]))[0].read_count).toBe(2);
+    expect(await as(ana,'select * from public.book_reads')).toHaveLength(1);
+    expect(await as(ben,'select * from public.book_reads where user_id=$1',[ana])).toHaveLength(0);
+    await expect(as(null,'select * from public.book_reads')).rejects.toThrow();
+    expect(Object.keys((await as(null,'select * from public.get_book_read_counts()'))[0]).sort()).toEqual(['book_id','read_count']);
+  });
+  it('blocks forged reading records and does not count views, reviews, or wishlists as completed reads', async () => {
+    await expect(as(null,'select public.set_book_read($1,true)',[book])).rejects.toThrow();
+    await expect(as(ana,'insert into public.book_reads(user_id,book_id) values($1,$2)',[ben,book])).rejects.toThrow();
+    await expect(as(ana,'update public.book_reads set user_id=$1',[ben])).rejects.toThrow();
+    await expect(as(ana,'select public.set_book_read($1,true)',['00000000-0000-4000-8000-999999999999'])).rejects.toThrow();
+    const [newBook]=await as<{id:string}>(admin,"insert into public.books(title,author,category,description) values('Sin lecturas','Autora','Espiritualidad','Descripción') returning id");
+    await as(ana,'select public.set_want_to_read($1,true)',[newBook.id]);
+    await as(ana,'select public.submit_reflection($1,$2)',[newBook.id,'Una reflexión no equivale a confirmar una lectura.']);
+    expect(await as(null,'select * from public.get_book_read_counts() where book_id=$1',[newBook.id])).toHaveLength(0);
+  });
+  it('excludes archived books and suspended readers, and allows each reader to undo only their read', async () => {
+    await as(admin,'select public.set_member_suspended($1,true)',[ben]);
+    expect((await as<{read_count:number}>(null,'select * from public.get_book_read_counts() where book_id=$1',[book]))[0].read_count).toBe(1);
+    await expect(as(ben,'select public.set_book_read($1,false)',[book])).rejects.toThrow();
+    await as(admin,'select public.set_member_suspended($1,false)',[ben]);
+    await as(ana,'select public.set_book_read($1,false)',[book]);
+    expect((await as<{read_count:number}>(null,'select * from public.get_book_read_counts() where book_id=$1',[book]))[0].read_count).toBe(1);
+    expect(await as(ben,'select * from public.book_reads')).toHaveLength(1);
+    await as(admin,'update public.books set archived=true where id=$1',[book]);
+    expect(await as(null,'select * from public.get_book_read_counts() where book_id=$1',[book])).toHaveLength(0);
+    await expect(as(ana,'select public.set_book_read($1,true)',[book])).rejects.toThrow();
+    await as(ben,'select public.set_book_read($1,false)',[book]);
+    await as(admin,'update public.books set archived=false where id=$1',[book]);
+  });
+  it('requires full names for new read confirmations and blocks suspended profile edits', async () => {
+    await expect(as(admin,'select public.set_book_read($1,true)',[book])).rejects.toThrow(/nombre|apellido/i);
+    await as(admin,'select public.set_member_suspended($1,true)',[ana]);
+    await expect(as(ana,'select public.save_reader_profile($1,$2,$3)',['Ana','Pérez',''])).rejects.toThrow();
+    await as(admin,'select public.set_member_suspended($1,false)',[ana]);
+  });
+  it('requires an active admin and matching title before permanently deleting a book and its relations', async () => {
+    const [b]=await as<{id:string}>(admin,"insert into public.books(title,author,category,description) values('Para borrar','Autora','Espiritualidad','Descripción') returning id");
+    await as(ana,'select public.set_want_to_read($1,true)',[b.id]);
+    await as(ana,'select public.set_book_read($1,true)',[b.id]);
+    await as(ana,'select public.submit_reflection($1,$2)',[b.id,'Este aporte se elimina junto al libro.']);
+    const [reflection]=await as<{id:string}>(admin,'select id from public.reflections where book_id=$1',[b.id]);
+    await expect(as(ana,'select public.delete_book($1,$2)',[b.id,'Para borrar'])).rejects.toThrow();
+    await expect(as(null,'select public.delete_book($1,$2)',[b.id,'Para borrar'])).rejects.toThrow();
+    await expect(as(admin,'select public.delete_book($1,$2)',[b.id,'Otro título'])).rejects.toThrow(/título/i);
+    expect(await as(null,'select id from public.books where id=$1',[b.id])).toHaveLength(1);
+    await as(admin,'select public.delete_book($1,$2)',[b.id,'Para borrar']);
+    for(const table of ['books','reflections','reading_list','book_reads']) {
+      expect(await as(admin,`select * from public.${table} where ${table==='books'?'id':'book_id'}=$1`,[b.id])).toHaveLength(0);
+    }
+    expect(await as(admin,'select * from public.reflection_submissions where reflection_id=$1',[reflection.id])).toHaveLength(0);
+    await expect(as(admin,'select public.delete_book($1,$2)',[b.id,'Para borrar'])).rejects.toThrow(/encontr/i);
+  });
+
+
   it('prevents administrators from suspending themselves', async () => {
     await expect(as(admin,'select public.set_member_suspended($1,true)',[admin])).rejects.toThrow();
   });

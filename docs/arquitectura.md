@@ -28,7 +28,7 @@ Las variables `VITE_` son públicas y se incorporan durante la compilación. Sec
 
 | Ruta | Acceso y función |
 | --- | --- |
-| `/` | Presentación, libros destacados, categorías y reflexiones |
+| `/` | Presentación, libros más leídos según marcas únicas, categorías y reflexiones |
 | `/biblioteca` | Catálogo, búsqueda por título/autor y filtro temático |
 | `/biblioteca/:id` | Ficha, libros relacionados, lista de lectura y aportes |
 | `/reflexiones` | Publicaciones aprobadas y búsqueda |
@@ -51,6 +51,7 @@ La fuente exacta de definiciones es la migración SQL; esta tabla explica su int
 | `profiles` | Alias, descripción e identificador; sin columna de correo ni copia de nombre/foto Google |
 | `memberships` | Rol `reader` o `admin` y suspensión; lectura propia o administrativa |
 | `books` | Título/edición, autor, categoría, descripción, ISBN, portada, destacado y archivo |
+| `book_reads` | Marcas individuales de libros terminados, privadas para su lector activo y encargados; agregado público por libro |
 | `reading_list` | Relación lector/libro única; lista pública cuando corresponde al lector activo y libro visible |
 | `reflections` | Identidad del aporte y texto aprobado; `body` puede ser nulo antes de la primera aprobación |
 | `reflection_submissions` | Versiones, estado, alertas de lenguaje y motivo de rechazo; autor activo y encargados |
@@ -64,7 +65,7 @@ No se registran copias ni préstamos. El archivo de un libro oculta su ficha del
 1. El encargado autoriza un correo desde el panel o mediante SQL en el alta inicial.
 2. Google autentica la cuenta; Supabase utiliza el hook para comprobar la invitación antes de crearla.
 3. Un trigger verifica nuevamente la invitación y crea perfil y membresía de lector. El alias comienza vacío.
-4. La persona elige explícitamente un alias; no se publica automáticamente información de Google.
+4. La persona completa nombre y apellido para formar el alias público; no se publica automáticamente información de Google. Los perfiles anteriores deben completarlos al entrar a su espacio.
 5. El navegador guarda la sesión y un verificador PKCE de corta vida para completar OAuth. Renueva tokens cuando corresponde y permite cerrar sesión.
 6. Las funciones verifican que la membresía siga activa en cada escritura. Suspender no depende de esperar a que expire un token.
 
@@ -86,7 +87,7 @@ Los estados de las versiones son `pending`, `approved`, `rejected` y `superseded
 
 ## Interfaces de escritura
 
-Las RPC públicas principales son `save_profile`, `manage_invitation`, `set_member_suspended`, `set_want_to_read`, `submit_reflection`, `moderate_submission`, `delete_reflection` e `import_books`. Sus parámetros exactos están definidos en SQL y en los llamados del frontend; deben evolucionar juntos.
+Las RPC públicas principales son `save_profile`, `manage_invitation`, `set_member_suspended`, `set_want_to_read`, `submit_reflection`, `moderate_submission`, `delete_reflection`, `import_books`, `save_reader_profile`, `set_book_read`, `get_book_read_counts` y `delete_book`. Sus parámetros exactos están definidos en SQL y en los llamados del frontend; deben evolucionar juntos.
 
 Los libros se crean o editan mediante PostgREST con autorización administrativa. Solo se permite cambiar `featured` directamente en las reflexiones; publicar contenido se hace mediante la función de moderación, no escribiendo `body` desde el navegador.
 
@@ -103,3 +104,7 @@ La exportación administrativa JSON incluye datos de aplicación, invitaciones y
 ## Criterios para cambios futuros
 
 Mantener sincronizados tipos, llamadas REST/RPC, validaciones SQL y pruebas. Crear una migración nueva para cada evolución del esquema. Conservar la separación entre texto aprobado y candidato, evitar credenciales privilegiadas en el navegador y comprobar permisos con roles reales en la suite SQL. Las nuevas funciones fuera del alcance inicial necesitan una decisión de producto antes de desarrollarse.
+
+## Cambios del 27 de octubre
+
+La migración `202610270001_reader_updates.sql` añade nombres públicos explícitos y lecturas. El ranking usa únicamente el agregado público de marcas únicas; no infiere lecturas de otros datos. Los nombres no son identificadores únicos y las relaciones continúan usando UUID. El borrado definitivo de libros exige un encargado activo y el título actual, y utiliza las cascadas de claves foráneas sin eliminar objetos de Storage. La guía `actualizacion-lecturas-perfiles.md` documenta despliegue y aceptación.

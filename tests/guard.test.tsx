@@ -2,7 +2,7 @@
 import React,{act} from 'react';
 import {afterEach,it,expect,vi} from 'vitest';
 import {createRoot,type Root} from 'react-dom/client';
-const {state}=vi.hoisted(()=>({state:{session:{user:{id:'reader'}},member:{role:'reader',suspended:false},profile:{alias:'Ana'},authLoading:false,loading:false,authError:'',refreshMember:async()=>{},reload:async()=>{}}}));
+const {state}=vi.hoisted(()=>({state:{session:{user:{id:'reader'}},member:{role:'reader',suspended:false},profile:{alias:'Ana Pérez',first_name:'Ana',last_name:'Pérez'},authLoading:false,loading:false,authError:'',refreshMember:async()=>{},reload:async()=>{}}}));
 vi.mock('../src/lib/store',()=>({useStore:()=>state}));
 import {Guard} from '../src/pages/Account';
 let root:Root;let host:HTMLDivElement;

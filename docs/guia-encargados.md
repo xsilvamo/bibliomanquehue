@@ -21,13 +21,21 @@ Guarda el CSV en UTF-8, separado por comas. Encierra entre comillas las descripc
 
 ## Agregar e importar
 
-En Administración → Libros puedes agregar un título, editarlo, destacarlo en el inicio o archivarlo. Archivar lo oculta del catálogo, las listas públicas y las reflexiones públicas; conserva los datos para poder restaurarlo. Los lectores no pueden aportar reflexiones a un libro archivado.
+En Administración → Libros puedes agregar un título, editarlo, archivarlo o borrarlo con confirmación. Archivar lo oculta del catálogo, las listas públicas y las reflexiones públicas; conserva los datos para poder restaurarlo. Los lectores no pueden aportar reflexiones a un libro archivado.
 
 Para importar: selecciona el CSV y los archivos de portada, revisa errores y previsualización y pulsa Importar. Hasta 500 libros y 2 MB por CSV; cada portada admite 2 MB. Si un libro falla, la transacción del catálogo se revierte completa. Las imágenes subidas antes del error pueden quedar sin usar en Storage: se indica en la interfaz y puedes revisarlas desde Supabase. No borres archivos sin comprobar que ninguna ficha los utiliza.
 
+## Borrar o archivar
+
+Archivar oculta el libro conservando sus datos. Borrar requiere escribir el título actual y confirmar; elimina definitivamente la ficha, reflexiones/versiones y listas/marcas de lectura relacionadas. La portada de Storage permanece para no afectar fichas que la compartan. Utiliza un respaldo previo si necesitas conservar ese contenido.
+
+## Lecturas y portada
+
+«Los más leídos» se calcula a partir de «Ya lo leí», una marca por persona y libro. Las listas «Quiero leer», visitas y reflexiones no aumentan el contador. Lectores suspendidos y libros archivados no cuentan. La exportación privada de Respaldos incluye las marcas individuales; el sitio público solo muestra cantidades por libro.
+
 ## Invitar y administrar lectores
 
-En Lectores e invitaciones autoriza el correo de Google y comparte el enlace `/entrar` por tu canal habitual. La web no envía correos ni mensajes automáticamente. El lector elige su alias y descripción: no se publica su correo ni se toma automáticamente su nombre de Google.
+En Lectores e invitaciones autoriza el correo de Google y comparte el enlace `/entrar` por tu canal habitual. La web no envía correos ni mensajes automáticamente. El lector completa nombre y apellido para formar su alias público, con descripción opcional. No se publica su correo ni se toma automáticamente su nombre de Google.
 
 Revocar una invitación impide crear una cuenta con ese correo, pero no elimina ni suspende a una persona ya registrada. Para eso usa Suspender en Lectores registrados. Una sesión que ya esté abierta tampoco podrá escribir después de la suspensión; sus perfiles, listas y reflexiones dejan de estar disponibles para visitantes. Puedes reactivar al lector después. No puedes suspender tu propia cuenta.
 
@@ -47,11 +55,11 @@ Haz una exportación antes de importar o modificar muchos libros y, durante el p
 
 El JSON es un respaldo de contenido, no una copia completa del servicio: no incluye cuentas de Supabase Auth, secretos ni configuración de OAuth. Para una recuperación completa del mismo proyecto, utiliza un volcado PostgreSQL mediante las herramientas de Supabase y respalda Storage por separado. Consulta [copias de Supabase](https://supabase.com/docs/guides/platform/backups).
 
-Si necesitas restaurar el contenido JSON, hazlo primero en un proyecto de prueba: aplica la migración, recrea las cuentas invitadas a través de Auth, elabora un mapa entre sus UUID antiguos y nuevos, y carga en orden perfiles/membresías, libros, listas, reflexiones y revisiones con credenciales administrativas fuera del navegador. Restaura portadas y actualiza URLs. No subas el respaldo al repositorio ni intentes restaurarlo desde el cliente público. Una copia SQL completa conserva las relaciones e identificadores y es preferible si está disponible.
+Si necesitas restaurar el contenido JSON, hazlo primero en un proyecto de prueba: aplica la migración, recrea las cuentas invitadas a través de Auth, elabora un mapa entre sus UUID antiguos y nuevos, y carga en orden perfiles/membresías, libros, listas y marcas de lectura, reflexiones y revisiones con credenciales administrativas fuera del navegador. Restaura portadas y actualiza URLs. No subas el respaldo al repositorio ni intentes restaurarlo desde el cliente público. Una copia SQL completa conserva las relaciones e identificadores y es preferible si está disponible.
 
 ## Cuenta eliminada
 
-Si un lector solicita eliminar su cuenta, verifica su identidad y elimina el usuario desde Supabase Authentication. Las claves foráneas eliminan su perfil, membresía, lista y reflexiones. Revoca también su invitación si no debe volver a registrarse. La eliminación es irreversible. Si solo requiere ocultar el perfil temporalmente, suspende su participación.
+Si un lector solicita eliminar su cuenta, verifica su identidad y elimina el usuario desde Supabase Authentication. Las claves foráneas eliminan su perfil, membresía, lista, marcas de lectura y reflexiones. Revoca también su invitación si no debe volver a registrarse. La eliminación es irreversible. Si solo requiere ocultar el perfil temporalmente, suspende su participación.
 
 ## Cuando el servicio no responde
 

@@ -181,3 +181,30 @@ h1, h2, h3, .book-author, .reflection-book, .footer-invite { overflow-wrap: anyw
   .profile-heading > div { flex: 1 1 180px; }
   .book-detail-copy > .button { width: 100%; }
 }
+
+/* Long section names retain their width; phones use a native section selector. */
+.tabs > [role="tab"] { flex: 0 0 auto; white-space: nowrap; }
+.admin-section-select { display: none; }
+.admin-tabs { scroll-padding-inline: 10px; }
+.book-reading-actions { display: flex; align-items: flex-start; flex-wrap: wrap; gap: 12px; }
+.read-book-control { min-width: 0; }
+.button.secondary.is-read { background: #e3ead9; border-color: #9ba98b; color: #435839; }
+.read-count { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; margin-top: 10px; color: var(--olive); }
+.ranking-help { margin-top: -10px; margin-bottom: 25px; font-size: 13px; }
+.delete-book-panel { border-color: #d8ae97; }
+.delete-book-panel > input { width: 100%; margin-top: 10px; }
+.delete-book-panel p, .delete-book-panel label { overflow-wrap: anywhere; }
+.nav .nav-join { min-width: 0; max-width: 190px; overflow-wrap: anywhere; }
+@media (max-width: 1000px) {
+  .nav .nav-join { max-width: none; }
+}
+@media (max-width: 680px) {
+  .admin-tabs { display: none; }
+  .admin-section-select { display: flex; gap: 9px; margin-bottom: 26px; font-size: 14px; }
+  .admin-section-select select { width: 100%; }
+  #admin-panel { min-width: 0; }
+  .book-reading-actions { gap: 12px; }
+  .book-reading-actions > .button, .book-reading-actions > .read-book-control { flex: 1 1 100%; width: 100%; }
+  .read-book-control > .button { width: 100%; }
+  .ranking-help { font-size: 14px; }
+}

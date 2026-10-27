@@ -120,7 +120,7 @@ end;
 $$;
 ```
 
-Después, abre `/entrar`, usa esa cuenta Google y guarda un alias en `/mi-espacio`.
+Después, abre `/entrar`, usa esa cuenta Google y completa nombre y apellido en `/mi-espacio` para formar el alias público.
 
 **Asignar el rol después de crear la cuenta:**
 

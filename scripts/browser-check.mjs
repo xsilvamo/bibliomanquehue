@@ -46,7 +46,7 @@ try{
  assert.equal(await evaluate("document.querySelector('button[aria-controls=\"main-nav\"]').getAttribute('aria-expanded')"),'false');
  await page('Page.navigate',{url:origin+'/entrar'});
  await until("document.querySelector('h1')?.textContent==='Entra a la comunidad'");
- assert.ok(await evaluate("document.body.textContent.includes('Tu alias, descripción, reflexiones aprobadas y lista')"));
+ assert.ok(await evaluate("document.body.textContent.includes('Tu nombre y apellido, descripción, reflexiones aprobadas y lista')"));
  await page('Page.navigate',{url:origin});
  await until("document.querySelector('h1')?.textContent.includes('Una lectura')");
  await evaluate('document.fonts.ready');

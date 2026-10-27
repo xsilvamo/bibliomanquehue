@@ -18,7 +18,7 @@ El responsable ya subió el código a GitHub, creó el proyecto Supabase, aplic�
 - [ ] Sin sesión: recorrer inicio, catálogo, categorías, búsqueda con/sin tildes, ficha, reflexiones y perfiles.
 - [ ] Abrir directamente las rutas de una ficha y de un perfil, y recargar: no deben responder 404 del alojamiento.
 - [ ] Entrar con una cuenta Google no invitada: no debe crearse su cuenta.
-- [ ] Entrar con una cuenta invitada: elegir alias, sin copiar nombre ni foto de Google al perfil.
+- [ ] Entrar con una cuenta invitada: completar nombre y apellido, sin copiar automáticamente nombre ni foto de Google al perfil.
 - [ ] Guardar y quitar libros de «Quiero leer» y comprobar su visibilidad desde otro navegador sin sesión.
 - [ ] Enviar dos reflexiones sobre un mismo libro. Hasta su aprobación solo debe verlas el autor y los encargados.
 - [ ] Probar texto vacío, espacios, 1501 caracteres y 1500 caracteres Unicode. No se debe poder eludir el límite mediante la API.
@@ -45,3 +45,8 @@ El responsable ya subió el código a GitHub, creó el proyecto Supabase, aplic�
 ## Criterio de apertura
 
 Los lectores completan el recorrido sin ayuda técnica y los encargados pueden invitar, registrar libros, moderar y respaldar. Se corrigen los fallos encontrados antes de ampliar la invitación. No hay una fecha fija ni una promesa de gratuidad ilimitada: se revisan límites del proveedor antes de ampliar el uso.
+
+## Actualización de lecturas y perfiles
+
+- [ ] Aplicar la migración nueva antes de publicar el frontend.
+- [ ] Completar los recorridos de `docs/actualizacion-lecturas-perfiles.md`, incluyendo nombre y apellido, ranking, desmarcado, selector móvil y borrado confirmado de un libro de prueba.

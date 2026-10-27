@@ -11,6 +11,7 @@ El código ya está respaldado en [GitHub](https://github.com/xsilvamo/manquepe)
 | Documento | Para qué sirve |
 | --- | --- |
 | [Móvil y dominio de pruebas](docs/dominio-pruebas.md) | Publicación propuesta en `manquepe.aaronsilva.site` y ajustes de OAuth |
+| [Actualización de lecturas y perfiles](docs/actualizacion-lecturas-perfiles.md) | Borrado, administración móvil, ranking y migración del 27 de octubre |
 | [Estado y próximos pasos](docs/estado-proyecto.md) | Avances confirmados, pendientes y punto de continuación |
 | [Configuración](docs/configuracion.md) | Supabase, Google, variables y primer administrador |
 | [Arquitectura](docs/arquitectura.md) | Pantallas, datos, permisos y flujo de moderación |
@@ -61,7 +62,7 @@ VITE_SUPABASE_URL= VITE_SUPABASE_ANON_KEY= VITE_CONTACT_EMAIL= npm test
 npm run build
 ```
 
-La última verificación de esta entrega documental pasó **36 pruebas** y la compilación de producción. La suite SQL ejecuta la migración y sus permisos sobre PostgreSQL mediante PGlite, con infraestructura mínima de Auth y Storage preparada para pruebas. No sustituye la integración con Supabase alojado.
+La última verificación de esta entrega documental pasó **55 pruebas** y la compilación de producción. La suite SQL ejecuta la migración y sus permisos sobre PostgreSQL mediante PGlite, con infraestructura mínima de Auth y Storage preparada para pruebas. No sustituye la integración con Supabase alojado.
 
 Con Chrome/Chromium instalado y permiso para abrir puertos locales:
 
@@ -72,6 +73,8 @@ npm run test:e2e
 El smoke test usa Chrome DevTools y genera capturas en `/tmp/manquepe-escritorio.png` y `/tmp/manquepe-movil.png`. Puedes elegir otro ejecutable con `BROWSER_BIN=/ruta/a/chromium npm run test:e2e`. No descarga navegadores. En la sesión inicial del agente, el entorno bloqueó los sockets y el arranque de Chrome; la prueba manual posterior del responsable se registra por separado en [estado](docs/estado-proyecto.md).
 
 ## Cambios en Supabase
+
+La actualización de lecturas y perfiles requiere aplicar `202610270001_reader_updates.sql` **antes de desplegar el frontend nuevo**. Sigue el [orden de publicación](docs/actualizacion-lecturas-perfiles.md#orden-de-publicación). El alias público pasa a ser nombre y apellido completados por cada lector; «los más leídos» cuenta una marca «Ya lo leí» por persona y libro.
 
 La migración `supabase/migrations/202610250001_manquepe.sql` **ya se aplicó al proyecto remoto**. No la ejecutes otra vez pegándola en SQL Editor ni modifiques su contenido para hacer cambios nuevos.
 

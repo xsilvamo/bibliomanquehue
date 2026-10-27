@@ -99,7 +99,7 @@ Referencias: [migraciones](https://supabase.com/docs/guides/deployment/database-
 
 ### Límite actual de la suite SQL
 
-`tests/database.test.ts` carga expresamente la migración inicial y verifica sus permisos con PostgreSQL/PGlite. Si agregas migraciones, debes ampliar el arranque de pruebas para aplicar todos los archivos en orden y cubrir la nueva conducta; agregar un archivo por sí solo no lo incorpora a esa prueba.
+`tests/helpers/database.ts` aplica todos los archivos SQL de `supabase/migrations/` ordenados por nombre. `tests/database.test.ts` verifica sus permisos con PostgreSQL/PGlite; `tests/reader-upgrade.test.ts` comprueba la actualización desde datos anteriores. Al agregar una migración, incorpora casos de prueba para la conducta nueva y los permisos afectados.
 
 La infraestructura externa de `auth` y `storage` en estas pruebas es mínima. La suite no certifica el panel alojado, las credenciales de Google ni las políticas/configuraciones que cambies por fuera de las migraciones.
 

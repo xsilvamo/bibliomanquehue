@@ -16,7 +16,7 @@ Comparte tu experiencia con respeto. Son bienvenidas las opiniones diferentes, l
 
 ## Privacidad del perfil
 
-Tu alias, descripción, reflexiones aprobadas y lista «Quiero leer» son públicos y pueden ser consultados por cualquier visitante. Tu correo se usa para el acceso y para que los encargados gestionen tu invitación, y no aparece en tu perfil. Puedes cambiar tu alias, descripción y lista, y eliminar tus reflexiones. Para solicitar la eliminación de tu cuenta, contacta a los encargados. No se solicita teléfono, fecha de nacimiento ni dirección.
+Tu alias, formado por tu nombre y apellido, tu descripción, reflexiones aprobadas y lista «Quiero leer» son públicos y pueden ser consultados por cualquier visitante. Tu correo se usa para el acceso y para que los encargados gestionen tu invitación, y no aparece en tu perfil. Puedes corregir tu nombre y apellido, cambiar tu descripción y lista, y eliminar tus reflexiones. Tus marcas individuales de «Ya lo leí» solo las ves tú y los encargados; el total por libro se utiliza en el ranking público. Para solicitar la eliminación de tu cuenta, contacta a los encargados. No se solicita teléfono, fecha de nacimiento ni dirección.
 
 ## Información que debe aportar la comunidad
 

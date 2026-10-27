@@ -91,3 +91,11 @@ El icono anterior de libro de la pestaña fue retirado. Los iconos de libros, li
 ### Actualización a la versión sin fondo
 
 El responsable aportó `public/images/logollama-sinfondo.png` (1024 × 1024 px, PNG con canal alfa). Esta versión reemplaza la anterior en encabezado, pie, pantalla de acceso, favicon y apple-touch-icon. Se retira el fondo blanco y el recorte redondeado de los componentes para mostrar la imagen tal como fue entregada. El archivo anterior se conserva como recurso original, pero ya no se referencia desde la interfaz.
+
+## Libros, lecturas y perfiles — 27 de octubre de 2026
+
+Solicitados e implementados localmente: borrado administrativo con confirmación del título; selector de secciones para móviles; portada con los más leídos; nombre y apellido como alias público. El responsable eligió explícitamente que cada lector marque «Ya lo leí», una vez por persona/libro.
+
+Se añade `202610270001_reader_updates.sql` sin modificar la migración inicial. Los perfiles existentes conservan sus datos y deben completar nombres; no se inventan apellidos ni lecturas anteriores. Las marcas individuales son privadas; el ranking agregado es público y excluye suspendidos/archivados. Los nombres completos pueden repetirse y cada perfil mantiene su UUID.
+
+55 pruebas aprobadas, compilación correcta y revisión de código sin hallazgos críticos/importantes. La migración remota y el despliegue no se ejecutaron desde esta sesión. Seguir `docs/actualizacion-lecturas-perfiles.md`: respaldar datos, aplicar migración, publicar frontend y verificar desde `manquepe.pages.dev`, donde el responsable confirmó que Google funciona. El dominio personalizado todavía no se da por verificado.

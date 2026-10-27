@@ -1,7 +1,7 @@
 export const categories = ['Espiritualidad', 'Biblia y lectio divina', 'Vida cristiana y formación', 'Testimonios', 'Oración y vida monástica'] as const;
 export type Category = typeof categories[number];
 export type Book = {id:string; title:string; author:string; category:Category; description:string; isbn:string; cover_url:string|null; featured:boolean; archived:boolean; created_at:string};
-export type Profile = {id:string; alias:string|null; bio:string; created_at:string};
+export type Profile = {id:string; alias:string|null; first_name:string|null; last_name:string|null; bio:string; created_at:string};
 export type Member = {user_id:string; role:'reader'|'admin'; suspended:boolean};
 export type Reflection = {id:string; book_id:string; author_id:string; body:string|null; featured:boolean; published_at:string|null; created_at:string};
 export type Submission = {id:string; reflection_id:string; author_id:string; body:string; flags:string[]; status:'pending'|'approved'|'rejected'|'superseded'; rejection_reason:string; moderated_by:string|null; created_at:string};
@@ -66,4 +66,23 @@ export function parseInventory(text:string):{books:InventoryBook[];errors:string
 export function download(name:string, contents:string, type='application/json') {
   const a=document.createElement('a');const url=URL.createObjectURL(new Blob([contents],{type}));
   a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
+export type FinishedRead = {user_id:string;book_id:string;created_at:string};
+export type BookReadCount = {book_id:string;read_count:number};
+export function mostReadBooks<T extends {id:string;title:string;archived:boolean}>(books:T[],counts:BookReadCount[],limit=4):(T&{read_count:number})[] {
+  const countByBook=new Map(counts.map(c=>[c.book_id,Number(c.read_count)]));
+  return books.map(book=>({...book,read_count:countByBook.get(book.id)??0}))
+    .filter(book=>!book.archived&&Number.isFinite(book.read_count)&&book.read_count>0)
+    .sort((a,b)=>b.read_count-a.read_count||a.title.localeCompare(b.title,'es')||a.id.localeCompare(b.id))
+    .slice(0,Math.max(0,limit));
+}
+export const cleanName=(value:string)=>value.trim().replace(/\s+/g,' ');
+export function validateReaderName(first:string,last:string):string|null {
+  if(characterCount(cleanName(first))<1||characterCount(cleanName(first))>60)return 'Escribe tu nombre (hasta 60 caracteres).';
+  if(characterCount(cleanName(last))<1||characterCount(cleanName(last))>80)return 'Escribe tu apellido (hasta 80 caracteres).';
+  return null;
+}
+export function profileIsComplete(profile:Partial<Pick<Profile,'alias'|'first_name'|'last_name'>>|undefined|null):boolean {
+  return !!profile&&!!profile.first_name?.trim()&&!!profile.last_name?.trim();
 }
