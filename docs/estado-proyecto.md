@@ -1,5 +1,7 @@
 # Estado del proyecto y punto de continuación
 
+La retroalimentación recopilada el **10 de noviembre de 2026** se sigue en [Mejoras recopiladas de la comunidad](mejoras-pendientes.md). Consultar ese registro para las nuevas tareas, las decisiones por conversar y la etapa final de diseño; el estado histórico descrito abajo no supone que esas mejoras ya estén implementadas.
+
 Actualizado: **25 de octubre de 2026**. Este documento distingue la implementación local, lo comunicado por el responsable y las comprobaciones que aún faltan. No contiene credenciales ni copias de datos personales.
 
 ## Objetivo y decisiones vigentes

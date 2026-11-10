@@ -10,6 +10,7 @@ El código ya está respaldado en [GitHub](https://github.com/xsilvamo/manquepe)
 
 | Documento | Para qué sirve |
 | --- | --- |
+| [Mejoras recopiladas de la comunidad](docs/mejoras-pendientes.md) | Lista de tareas, estados y decisiones pendientes para avanzar progresivamente |
 | [Móvil y dominio de pruebas](docs/dominio-pruebas.md) | Publicación propuesta en `manquepe.aaronsilva.site` y ajustes de OAuth |
 | [Actualización de lecturas y perfiles](docs/actualizacion-lecturas-perfiles.md) | Borrado, administración móvil, ranking y migración del 27 de octubre |
 | [Estado y próximos pasos](docs/estado-proyecto.md) | Avances confirmados, pendientes y punto de continuación |
