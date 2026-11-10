@@ -18,9 +18,9 @@ Marcar la casilla al completar una tarea y añadir fecha y referencia al cambio.
 | [ ] | M06 | Decidir si el sitio llevará el nombre Manquehue | Por conversar | Conversarlo con el equipo antes de cambiar el nombre o la identidad. |
 | [ ] | M07 | Incorporar un apartado de donaciones de libros | Por evaluar | Definir un apartado o mecanismo para coordinar las donaciones y quién será responsable de gestionarlas. |
 | [x] | M08 | Borrar reflexión | Completada | El responsable informa que esta tarea ya está lista. Fecha de finalización no indicada. |
-| [ ] | M09 | Poner la fecha arriba de las reflexiones | Pendiente | Mostrar la fecha en la parte superior en vez de abajo. Dejar considerado un futuro agrupamiento por mes; ese agrupamiento aún debe definirse. |
+| [x] | M09 | Poner la fecha arriba de las reflexiones | Completada | Implementada localmente el 2026-11-10: fecha de publicación arriba en tarjetas públicas y fecha de envío arriba en «Mis reflexiones». El agrupamiento por mes queda por definir. Despliegue pendiente. |
 | [ ] | M10 | Separar los roles de lector, administrador y ayudante | Pendiente | Definir un rol ayudante o similar que pueda asignar solamente libros y no tenga acceso administrativo. Precisar qué significa «asignar libros» y sus permisos antes de implementarlo. |
-| [ ] | M11 | Limitar la extensión de las reseñas en el inicio | Pendiente | Evitar que una reseña larga ocupe demasiada pantalla. Elegir entre un resumen con «Mostrar más» o abrir la reseña completa y permitir acceder al perfil del autor. |
+| [x] | M11 | Limitar la extensión de las reseñas en el inicio | Completada | Implementada localmente el 2026-11-10: extracto de hasta 280 caracteres con «Mostrar más» y «Mostrar menos» en todas las tarjetas públicas: inicio, menú de reflexiones, fichas de libros y perfiles. Se conserva el enlace al perfil del autor. Despliegue pendiente. |
 | [ ] | M12 | Permitir que un administrador cambie roles | Pendiente | Un administrador podrá dar el rol de administrador o cambiar los roles de otros usuarios. Definir reglas y límites junto con M10. |
 | [ ] | M13 | Usar lector como rol por defecto | Pendiente | Las nuevas personas deben recibir el rol lector por defecto. Revisar el flujo actual de alta e invitaciones al implementar M10 y M12. |
 
@@ -36,3 +36,7 @@ Marcar la casilla al completar una tarea y añadir fecha y referencia al cambio.
 | Fecha | Tareas | Actualización |
 | --- | --- | --- |
 | 2026-11-10 | M01–M13 | Registro inicial de la retroalimentación. M08 ya estaba completada según el responsable. Las demás tareas quedan pendientes o sujetas a evaluación/conversación. |
+
+| 2026-11-10 | M09, M11 | Implementación local: fechas arriba y extractos expandibles en el inicio. 59 pruebas aprobadas y compilación correcta. Sin migraciones ni despliegue. |
+
+| 2026-11-10 | M11 | Ampliado «Mostrar más» a todas las tarjetas públicas de reflexiones, por solicitud del responsable. |
