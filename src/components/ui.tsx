@@ -1,4 +1,4 @@
-import React,{useState,type ReactNode} from 'react';
+import React,{useId,useState,type ReactNode} from 'react';
 import {Link} from 'react-router-dom';
 import {ArrowUpRight,BookOpen,Bookmark,Loader2,MessageCircle,ArrowRight,Check,AlertCircle} from 'lucide-react';
 import {useStore} from '../lib/store';
@@ -16,5 +16,22 @@ export function SaveBook({bookId,compact=false}:{bookId:string;compact?:boolean}
  return <><button className={compact?`icon-button ${saved?'saved':''}`:'button secondary'} aria-label={saved?'Quitar de Quiero leer':'Guardar en Quiero leer'} aria-pressed={saved} disabled={busy||!member||member.suspended} onClick={async()=>{setBusy(true);setError('');try{await backend.rpc('set_want_to_read',{p_book_id:bookId,p_saved:!saved});await reload();}catch(e){setError((e as Error).message);}finally{setBusy(false);}}}>{busy?<Loader2 size={18} className="spin"/>:saved?<Check size={18}/>:<Bookmark size={18}/>} {!compact&&(saved?'En mi lista':'Quiero leer')}</button>{error&&<span role="alert" className="field-error">{error}</span>}</>;
 }
 export function BookCard({book,readCount}:{book:Book;readCount?:number}){return <article className="book-card"><Link to={`/biblioteca/${book.id}`} className="cover-link"><Cover book={book}/><span className="cover-arrow"><ArrowUpRight size={20}/></span></Link><div className="book-card-meta"><span className="eyebrow">{book.category}</span><SaveBook bookId={book.id} compact/></div><Link to={`/biblioteca/${book.id}`}><h3>{book.title}</h3></Link><p>{book.author}</p>{readCount!==undefined&&<span className="read-count"><BookOpen size={14}/>{readCount} {readCount===1?'lector':'lectores'}</span>}</article>;}
-export function ReflectionCard({reflection}:{reflection:Reflection}){const {books,profiles}=useStore();const book=books.find(b=>b.id===reflection.book_id);const profile=profiles.find(p=>p.id===reflection.author_id);return <article className="reflection-card"><span className="quote-mark" aria-hidden="true">“</span><p className="reflection-body">{reflection.body}</p><div className="reflection-author"><span className="avatar">{profile?.alias?.slice(0,1).toUpperCase()??'L'}</span><div><Link to={`/lectores/${reflection.author_id}`}>{profile?.alias??'Lector'}</Link><small>{reflection.published_at&&formatDate(reflection.published_at)}</small></div></div>{book&&<Link to={`/biblioteca/${book.id}`} className="reflection-book"><BookOpen size={15}/>{book.title}<ArrowUpRight size={15}/></Link>}</article>;}
+export function ReflectionCard({reflection}:{reflection:Reflection}){
+ const {books,profiles}=useStore();
+ const [expanded,setExpanded]=useState(false);
+ const bodyId=useId();
+ const book=books.find(b=>b.id===reflection.book_id);
+ const profile=profiles.find(p=>p.id===reflection.author_id);
+ const characters=[...(reflection.body??'')];
+ const hasPreview=characters.length>280;
+ const body=hasPreview&&!expanded?`${characters.slice(0,280).join('').trimEnd()}…`:reflection.body;
+ return <article className="reflection-card">
+  {reflection.published_at&&<time className="reflection-date" dateTime={reflection.published_at}>{formatDate(reflection.published_at)}</time>}
+  <span className="quote-mark" aria-hidden="true">“</span>
+  <p id={bodyId} className="reflection-body">{body}</p>
+  {hasPreview&&<button className="text-link reflection-toggle" aria-expanded={expanded} aria-controls={bodyId} onClick={()=>setExpanded(!expanded)}>{expanded?'Mostrar menos':'Mostrar más'}</button>}
+  <div className="reflection-author"><span className="avatar">{profile?.alias?.slice(0,1).toUpperCase()??'L'}</span><div><Link to={`/lectores/${reflection.author_id}`}>{profile?.alias??'Lector'}</Link></div></div>
+  {book&&<Link to={`/biblioteca/${book.id}`} className="reflection-book"><BookOpen size={15}/>{book.title}<ArrowUpRight size={15}/></Link>}
+ </article>;
+}
 export function SectionHead({eyebrow,title,link,to}:{eyebrow:string;title:string;link?:string;to?:string}){return <div className="section-head"><div><span className="eyebrow">{eyebrow}</span><h2>{title}</h2></div>{link&&to&&<Link to={to} className="text-link">{link}<ArrowRight size={18}/></Link>}</div>;}
