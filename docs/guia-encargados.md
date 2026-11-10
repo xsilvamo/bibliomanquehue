@@ -68,3 +68,7 @@ Si toda la biblioteca muestra un error, revisa el estado del proyecto en Supabas
 Si falla Google, comprueba que se usa el correo invitado, que el proveedor está habilitado y que la URL `/entrar` está permitida. En la fase de prueba de Google, la cuenta debe estar también entre los usuarios de prueba del consentimiento OAuth. Una invitación de Manquehue y un usuario de prueba de Google son configuraciones diferentes.
 
 Las variables `VITE_` se fijan al compilar: después de corregirlas, vuelve a desplegar. No copies mensajes completos con tokens o códigos de acceso en correos públicos.
+
+## Roles y ayudantes del catálogo
+
+En Lectores e invitaciones, cada administrador puede cambiar roles de otras personas y pulsar «Guardar rol». Lector es el rol predeterminado. Ayudante permite agregar y editar libros y portadas desde «Gestionar catálogo», sin acceso administrativo. El rol propio no puede cambiarse. Consultar [roles, permisos y publicación](roles-catalogo.md).

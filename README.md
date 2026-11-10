@@ -10,6 +10,7 @@ El código ya está respaldado en [GitHub](https://github.com/xsilvamo/manquepe)
 
 | Documento | Para qué sirve |
 | --- | --- |
+| [Roles y catálogo](docs/roles-catalogo.md) | Permisos de lector, ayudante y administrador; gestión de roles y publicación |
 | [Lecturas en perfiles públicos](docs/lecturas-publicas.md) | Sección «Ya lo leí», permisos y migración del 10 de noviembre |
 | [Mejoras recopiladas de la comunidad](docs/mejoras-pendientes.md) | Lista de tareas, estados y decisiones pendientes para avanzar progresivamente |
 | [Móvil y dominio de pruebas](docs/dominio-pruebas.md) | Publicación propuesta en `manquepe.aaronsilva.site` y ajustes de OAuth |

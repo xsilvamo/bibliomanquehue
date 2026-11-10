@@ -75,6 +75,7 @@ export function Layout({ children }: { children: ReactNode }) {
           <NavLink to="/sobre">Sobre Manquehue</NavLink>
           <NavLink className="nav-join" to={session ? '/mi-espacio' : '/entrar'}>{session ? (profile?.alias ?? 'Mi espacio') : 'Soy parte'}<ArrowUpRight size={17} /></NavLink>
           {member?.role === 'admin' && !member.suspended && <NavLink to="/admin">Administrar</NavLink>}
+          {member?.role === 'helper' && !member.suspended && <NavLink to="/catalogo">Gestionar catálogo</NavLink>}
           {session && <button className="icon-button logout" aria-label="Cerrar sesión" onClick={() => void backend.signOut()}><LogOut size={18} /></button>}
         </nav>
       </div>

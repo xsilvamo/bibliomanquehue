@@ -41,13 +41,14 @@ export function ProfileEditor({onSaved}:{onSaved?:()=>void}) {
   <button className="button" disabled={busy}>{busy&&<Loader2 size={17} className="spin"/>}{profileIsComplete(profile)?'Guardar cambios':'Guardar mi perfil'}<ArrowRight size={17}/></button>
  </form>;
 }
-export function Guard({children,admin=false}:{children:ReactNode;admin?:boolean}){const {session,member,authLoading,authError,profile,loading,hasLoaded,error:dataError,refreshMember,reload}=useStore();
+export function Guard({children,admin=false,catalog=false}:{children:ReactNode;admin?:boolean;catalog?:boolean}){const {session,member,authLoading,authError,profile,loading,hasLoaded,error:dataError,refreshMember,reload}=useStore();
  if(!session)return <Login/>;
  if((authLoading&&!member)||(loading&&!profile))return <Spinner/>;
  if(!hasLoaded&&dataError)return <div className="container page narrow"><Notice error>{dataError}</Notice><button className="button secondary" onClick={()=>void reload()}>Reintentar</button></div>;
  if(authError&&!member)return <div className="container page narrow"><Notice error>{authError}</Notice><button className="button secondary" onClick={()=>{void refreshMember();void reload();}}>Reintentar</button></div>;
  if(!member||member.suspended)return <div className="container page narrow"><h1>Tu cuenta necesita atención</h1><p>Tu participación no está activa. Contacta a los encargados para revisar tu acceso.</p><Link className="button" to="/contacto">Contactar</Link></div>;
  if(admin&&member.role!=='admin')return <div className="container page narrow"><h1>Este espacio es para los encargados</h1><Link className="button" to="/mi-espacio">Volver a mi espacio</Link></div>;
+ if(catalog&&member.role!=='admin'&&member.role!=='helper')return <div className="container page narrow"><h1>Este espacio es para ayudantes y administradores</h1><Link className="button" to="/mi-espacio">Volver a mi espacio</Link></div>;
  if(!profileIsComplete(profile))return <div className="container page narrow"><ProfileEditor/></div>;
  return <>{authError&&<Notice error>{authError}</Notice>}{children}</>;
 }

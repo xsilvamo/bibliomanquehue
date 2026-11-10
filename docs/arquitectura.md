@@ -36,6 +36,7 @@ Las variables `VITE_` son públicas y se incorporan durante la compilación. Sec
 | `/sobre`, `/contacto`, `/convivencia` | Información del proyecto y participación |
 | `/entrar` | Acceso Google y retorno de OAuth |
 | `/mi-espacio` | Perfil, lista y seguimiento de reflexiones del lector activo |
+| `/catalogo` | Agregar y editar libros activos; ayudantes y administradores activos |
 | `/admin` | Libros, CSV, moderación, invitaciones, lectores y exportación; solo encargados activos |
 
 Las rutas privadas requieren sesión, membresía activa y perfil preparado. La migración verifica los permisos de las operaciones aunque se invoquen directamente desde la API.
@@ -49,7 +50,7 @@ La fuente exacta de definiciones es la migración SQL; esta tabla explica su int
 | `auth.users` | Identidad administrada por Supabase; no se consulta desde el catálogo público |
 | `invitations` | Correos autorizados y estado; consulta útil solo para encargados |
 | `profiles` | Alias, descripción e identificador; sin columna de correo ni copia de nombre/foto Google |
-| `memberships` | Rol `reader` o `admin` y suspensión; lectura propia o administrativa |
+| `memberships` | Rol `reader`, `helper` o `admin` y suspensión; lectura propia o administrativa |
 | `books` | Título/edición, autor, categoría, descripción, ISBN, portada, destacado y archivo |
 | `book_reads` | Registros completos privados para su lector activo y encargados; relaciones lector/libro públicas mediante `get_public_book_reads`, solo para perfiles visibles activos y libros no archivados; agregado público por libro |
 | `reading_list` | Relación lector/libro única; lista pública cuando corresponde al lector activo y libro visible |
@@ -69,7 +70,7 @@ No se registran copias ni préstamos. El archivo de un libro oculta su ficha del
 5. El navegador guarda la sesión y un verificador PKCE de corta vida para completar OAuth. Renueva tokens cuando corresponde y permite cerrar sesión.
 6. Las funciones verifican que la membresía siga activa en cada escritura. Suspender no depende de esperar a que expire un token.
 
-Los roles administrativos iniciales se asignan desde SQL, no desde un formulario controlado por lectores. Las funciones que necesitan privilegios se definen con un `search_path` fijo y permisos de ejecución explícitos. RLS controla las lecturas públicas y privadas.
+El primer administrador se asigna desde SQL. Los administradores activos pueden cambiar roles de otras personas desde el panel mediante `set_member_role`; no se permite cambiar el rol propio. El rol predeterminado es lector. Los ayudantes gestionan solo libros activos desde `/catalogo`. Las funciones que necesitan privilegios se definen con un `search_path` fijo y permisos de ejecución explícitos. RLS controla las lecturas públicas y privadas.
 
 Las actualizaciones de fondo preservan formularios abiertos. Al cambiar de identidad se descartan datos de la identidad anterior, y se evita aplicar respuestas antiguas sobre solicitudes más recientes.
 
@@ -87,15 +88,15 @@ Los estados de las versiones son `pending`, `approved`, `rejected` y `superseded
 
 ## Interfaces de escritura
 
-Las RPC públicas principales son `save_profile`, `manage_invitation`, `set_member_suspended`, `set_want_to_read`, `submit_reflection`, `moderate_submission`, `delete_reflection`, `import_books`, `save_reader_profile`, `set_book_read`, `get_book_read_counts`, `get_public_book_reads` y `delete_book`. Sus parámetros exactos están definidos en SQL y en los llamados del frontend; deben evolucionar juntos.
+Las RPC públicas principales son `save_profile`, `manage_invitation`, `set_member_suspended`, `set_want_to_read`, `submit_reflection`, `moderate_submission`, `delete_reflection`, `import_books`, `save_reader_profile`, `set_book_read`, `get_book_read_counts`, `get_public_book_reads`, `set_member_role`, `save_catalog_book` y `delete_book`. Sus parámetros exactos están definidos en SQL y en los llamados del frontend; deben evolucionar juntos.
 
-Los libros se crean o editan mediante PostgREST con autorización administrativa. Solo se permite cambiar `featured` directamente en las reflexiones; publicar contenido se hace mediante la función de moderación, no escribiendo `body` desde el navegador.
+Los administradores crean o editan libros mediante PostgREST. Los ayudantes usan `save_catalog_book`, que limita los campos editables y no permite archivar, borrar ni importar. Solo se permite cambiar `featured` directamente en las reflexiones; publicar contenido se hace mediante la función de moderación, no escribiendo `body` desde el navegador.
 
 La importación CSV valida campos, categorías, duplicados y archivos antes de guardar. La inserción del catálogo usa una transacción mediante `import_books`; admite 1–500 registros. Las imágenes ya subidas pueden quedar sin uso si una operación posterior falla: el sistema informa esa situación.
 
 ## Portadas, exportaciones y contenido
 
-Storage usa el bucket público `covers`, con escrituras administrativas. Formatos JPG, PNG y WebP, hasta 2 MB por portada. La aplicación admite URLs HTTPS de portadas; un archivo faltante se reemplaza visualmente por una cubierta tipográfica.
+Storage usa el bucket público `covers`; los ayudantes y administradores pueden insertar portadas nuevas, y solo los administradores pueden reemplazar o borrar objetos. Formatos JPG, PNG y WebP, hasta 2 MB por portada. La aplicación admite URLs HTTPS de portadas; un archivo faltante se reemplaza visualmente por una cubierta tipográfica.
 
 Las portadas externas se solicitan al servidor de su URL; para conservarlas bajo control de la comunidad se pueden subir al bucket. Las fuentes e ilustración propia se sirven con el sitio.
 
