@@ -63,3 +63,15 @@ it.each(['book','profile'])('previews long reflections on the %s page and allows
  await act(async()=>button('Mostrar menos').click());
  expect(body.textContent).not.toContain('FINAL DE LA REFLEXIÓN');
 });
+
+it('shows only three reflections on home while the reflections menu retains all of them',async()=>{
+ state.reflections=Array.from({length:5},(_,i)=>({...reflection,id:`limit-${i}`,body:`Reflexión número ${i+1}`}));
+ await page(<Home/>);
+ expect(host.querySelectorAll('.reflection-card')).toHaveLength(3);
+ expect(host.textContent).not.toContain('Reflexión número 4');
+ expect(host.textContent).not.toContain('Reflexión número 5');
+ const allLink=Array.from(host.querySelectorAll('a')).find(a=>a.textContent?.startsWith('Leer las reflexiones'));
+ expect(allLink?.getAttribute('href')).toBe('/reflexiones');
+ await act(async()=>root.render(<MemoryRouter><Reflections/></MemoryRouter>));
+ expect(host.querySelectorAll('.reflection-card')).toHaveLength(5);
+});
