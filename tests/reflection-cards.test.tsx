@@ -4,7 +4,7 @@ import {afterEach,it,expect,vi} from 'vitest';
 import {createRoot,type Root} from 'react-dom/client';
 import {MemoryRouter,Routes,Route} from 'react-router-dom';
 import type {Reflection,Book,Profile} from '../src/lib/domain';
-const {state}=vi.hoisted(()=>({state:{books:[] as Book[],profiles:[] as Profile[],reading:[],session:null,reflections:[] as Reflection[],readCounts:[],loading:false,hasLoaded:true,error:'',reload:async()=>{}}}));
+const {state}=vi.hoisted(()=>({state:{books:[] as Book[],profiles:[] as Profile[],reading:[],publicReads:[] as {user_id:string;book_id:string}[],session:null,reflections:[] as Reflection[],readCounts:[],loading:false,hasLoaded:true,error:'',reload:async()=>{}}}));
 vi.mock('../src/lib/store',()=>({useStore:()=>state}));
 import {Home,Reflections,ReaderProfile} from '../src/pages/Public';
 import {BookPage} from '../src/pages/Book';
@@ -12,7 +12,7 @@ let root:Root;let host:HTMLDivElement;
 (globalThis as Record<string,unknown>).IS_REACT_ACT_ENVIRONMENT=true;
 const longBody='Una lectura compartida abre caminos. '.repeat(25)+'FINAL DE LA REFLEXIÓN';
 const reflection:Reflection={id:'r1',book_id:'b1',author_id:'p1',body:longBody,featured:false,published_at:'2026-11-09T12:00:00Z',created_at:'2026-11-08T12:00:00Z'};
-afterEach(async()=>{await act(async()=>root?.unmount());host?.remove();state.reflections=[];state.books=[];state.profiles=[];});
+afterEach(async()=>{await act(async()=>root?.unmount());host?.remove();state.reflections=[];state.books=[];state.profiles=[];state.publicReads=[];});
 async function page(element:React.ReactElement,entry='/'){host=document.createElement('div');document.body.append(host);root=createRoot(host);await act(async()=>root.render(<MemoryRouter initialEntries={[entry]}>{element}</MemoryRouter>));}
 function button(label:string){return Array.from(host.querySelectorAll('button')).find(b=>b.textContent===label)!;}
 it('limits long home reflections and lets each reader expand and collapse them independently',async()=>{
@@ -74,4 +74,18 @@ it('shows only three reflections on home while the reflections menu retains all 
  expect(allLink?.getAttribute('href')).toBe('/reflexiones');
  await act(async()=>root.render(<MemoryRouter><Reflections/></MemoryRouter>));
  expect(host.querySelectorAll('.reflection-card')).toHaveLength(5);
+});
+
+it('shows only the selected reader’s finished books in the public profile and explains an empty list',async()=>{
+ state.books=[{id:'b1',title:'Libro terminado',author:'Autora',category:'Espiritualidad',description:'Texto',isbn:'',cover_url:null,featured:false,archived:false,created_at:'2026-11-08'}];
+ state.profiles=[{id:'p1',alias:'Ana Pérez',first_name:'Ana',last_name:'Pérez',bio:'',created_at:'2026-11-08'},{id:'p2',alias:'Ben Soto',first_name:'Ben',last_name:'Soto',bio:'',created_at:'2026-11-08'}];
+ state.publicReads=[{user_id:'p1',book_id:'b1'}];
+ await page(<Routes><Route path="/:id" element={<ReaderProfile/>}/></Routes>,'/p1');
+ const section=Array.from(host.querySelectorAll('section')).find(s=>s.querySelector('h2')?.textContent==='Ya lo leí');
+ expect(section).toBeDefined();
+ expect(section?.querySelector('.book-card h3')?.textContent).toBe('Libro terminado');
+ expect(section?.querySelector('.cover-link')?.getAttribute('href')).toBe('/biblioteca/b1');
+ await act(async()=>root.render(<MemoryRouter initialEntries={['/p2']} key="other-reader"><Routes><Route path="/:id" element={<ReaderProfile/>}/></Routes></MemoryRouter>));
+ expect(host.querySelectorAll('.book-card')).toHaveLength(0);
+ expect(host.textContent).toContain('Este lector todavía no ha marcado libros como leídos.');
 });

@@ -13,7 +13,7 @@ Marcar la casilla al completar una tarea y añadir fecha y referencia al cambio.
 | [ ] | M01 | Cambiar el diseño | Para el final | Abordar cuando estén listas las demás mejoras acordadas. |
 | [ ] | M02 | Editar los iconos generados con IA | Para el final | Revisarlos y reemplazarlos o ajustarlos durante la etapa de diseño. |
 | [ ] | M03 | Crear nuevas frases | Para el final | Se escribirán a mano durante la etapa de diseño. |
-| [ ] | M04 | Mostrar los libros «Ya lo leí» en el perfil público | Pendiente | Desde el menú de lectores, al abrir un perfil público, mostrar los libros que esa persona marcó como leídos. Revisar la visibilidad y los permisos: la documentación actual describe esas marcas individuales como privadas. |
+| [x] | M04 | Mostrar los libros «Ya lo leí» en el perfil público | Completada | Implementada localmente el 2026-11-10: sección pública de lecturas terminadas, con filtros de perfiles activos y libros visibles. 65 pruebas aprobadas y compilación correcta. Requiere aplicar migración y desplegar; ver [publicación](lecturas-publicas.md). |
 | [ ] | M05 | Mostrar si un libro está disponible | Por evaluar | Primero definir cómo se gestionarán los préstamos por los administradores y cómo eso determinará la disponibilidad. No se ha elegido todavía un flujo de préstamos. |
 | [ ] | M06 | Decidir si el sitio llevará el nombre Manquehue | Por conversar | Conversarlo con el equipo antes de cambiar el nombre o la identidad. |
 | [ ] | M07 | Incorporar un apartado de donaciones de libros | Por evaluar | Definir un apartado o mecanismo para coordinar las donaciones y quién será responsable de gestionarlas. |
@@ -40,3 +40,5 @@ Marcar la casilla al completar una tarea y añadir fecha y referencia al cambio.
 | 2026-11-10 | M09, M11 | Implementación local: fechas arriba y extractos expandibles en el inicio. 59 pruebas aprobadas y compilación correcta. Sin migraciones ni despliegue. |
 
 | 2026-11-10 | M11 | Ampliado «Mostrar más» a todas las tarjetas públicas de reflexiones, por solicitud del responsable. |
+
+| 2026-11-10 | M04 | Perfil público con «Ya lo leí», consulta pública limitada a lector/libro y avisos de visibilidad. Migración remota y despliegue pendientes. |

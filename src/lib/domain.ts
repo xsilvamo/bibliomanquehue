@@ -86,3 +86,5 @@ export function validateReaderName(first:string,last:string):string|null {
 export function profileIsComplete(profile:Partial<Pick<Profile,'alias'|'first_name'|'last_name'>>|undefined|null):boolean {
   return !!profile&&!!profile.first_name?.trim()&&!!profile.last_name?.trim();
 }
+
+export type PublicBookRead = Pick<FinishedRead,'user_id'|'book_id'>;

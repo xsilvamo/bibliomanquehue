@@ -24,7 +24,7 @@ El responsable eligió que cada lector confirme sus lecturas con **«Ya lo leí�
 
 La portada muestra hasta cuatro libros, ordenados por lectores que confirmaron la lectura, con desempate por título e identificador. Los suspendidos y los libros archivados no participan. No se usan visitas, reseñas ni listas de deseos para inferir lecturas; no se inventan datos anteriores.
 
-Sin marcas todavía se muestra «Aún no hay lecturas registradas» y un acceso al catálogo. En Mi espacio → Ya leí cada lector puede consultar sus propias marcas. Las marcas individuales son privadas para su dueño y los encargados; el agregado de cantidad por libro es público.
+Sin marcas todavía se muestra «Aún no hay lecturas registradas» y un acceso al catálogo. En Mi espacio → Ya leí cada lector puede consultar sus propias marcas. En la entrega original, las marcas individuales eran privadas para su dueño y los encargados. La [actualización de perfiles públicos del 10 de noviembre](lecturas-publicas.md) publica la relación lector/libro de perfiles visibles activos; las fechas del registro siguen privadas. El agregado de cantidad por libro es público.
 
 La elección manual de libros destacados deja de gobernar la portada. Los campos históricos se conservan en la base, pero se retiran del editor los controles que prometían «Destacar en el inicio». Las reflexiones destacadas siguen funcionando de forma independiente.
 

@@ -51,7 +51,7 @@ La fuente exacta de definiciones es la migración SQL; esta tabla explica su int
 | `profiles` | Alias, descripción e identificador; sin columna de correo ni copia de nombre/foto Google |
 | `memberships` | Rol `reader` o `admin` y suspensión; lectura propia o administrativa |
 | `books` | Título/edición, autor, categoría, descripción, ISBN, portada, destacado y archivo |
-| `book_reads` | Marcas individuales de libros terminados, privadas para su lector activo y encargados; agregado público por libro |
+| `book_reads` | Registros completos privados para su lector activo y encargados; relaciones lector/libro públicas mediante `get_public_book_reads`, solo para perfiles visibles activos y libros no archivados; agregado público por libro |
 | `reading_list` | Relación lector/libro única; lista pública cuando corresponde al lector activo y libro visible |
 | `reflections` | Identidad del aporte y texto aprobado; `body` puede ser nulo antes de la primera aprobación |
 | `reflection_submissions` | Versiones, estado, alertas de lenguaje y motivo de rechazo; autor activo y encargados |
@@ -87,7 +87,7 @@ Los estados de las versiones son `pending`, `approved`, `rejected` y `superseded
 
 ## Interfaces de escritura
 
-Las RPC públicas principales son `save_profile`, `manage_invitation`, `set_member_suspended`, `set_want_to_read`, `submit_reflection`, `moderate_submission`, `delete_reflection`, `import_books`, `save_reader_profile`, `set_book_read`, `get_book_read_counts` y `delete_book`. Sus parámetros exactos están definidos en SQL y en los llamados del frontend; deben evolucionar juntos.
+Las RPC públicas principales son `save_profile`, `manage_invitation`, `set_member_suspended`, `set_want_to_read`, `submit_reflection`, `moderate_submission`, `delete_reflection`, `import_books`, `save_reader_profile`, `set_book_read`, `get_book_read_counts`, `get_public_book_reads` y `delete_book`. Sus parámetros exactos están definidos en SQL y en los llamados del frontend; deben evolucionar juntos.
 
 Los libros se crean o editan mediante PostgREST con autorización administrativa. Solo se permite cambiar `featured` directamente en las reflexiones; publicar contenido se hace mediante la función de moderación, no escribiendo `body` desde el navegador.
 
